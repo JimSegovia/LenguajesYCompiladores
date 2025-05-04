@@ -4,13 +4,21 @@
 
 package netbeans.analizadorlexico;
 
+import vista.ViewLabo6;
+
 /**
  *
  * @author ARIAN BEJAR
  */
 public class App {
+    
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+            java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                // Aquí creamos e inicializamos la interfaz gráfica
+                new ViewLabo6().setVisible(true);
+            }
+        });
     }
 }
