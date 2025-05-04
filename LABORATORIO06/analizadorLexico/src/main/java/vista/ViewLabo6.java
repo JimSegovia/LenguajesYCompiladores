@@ -109,6 +109,7 @@ public class ViewLabo6 extends javax.swing.JFrame {
         btnLimpiar.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 14)); // NOI18N
         btnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
         btnLimpiar.setText("LIMPIAR");
+        btnLimpiar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarActionPerformed(evt);

@@ -37,7 +37,7 @@ public class AnalizadorLexico {
         String lexema = "";
         int i = 0;
         int n = entrada.length();
-        boolean octalValido = true; // Bandera para validar dígitos octales
+        boolean octalValido = true;
 
         while (i < n) {
             char c = entrada.charAt(i);
@@ -107,21 +107,33 @@ public class AnalizadorLexico {
                         i++;
                     } else {
                         // Transición lambda (aceptar con un solo dígito)
-                        modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
-                        modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        String numStr = lexema.substring(3); // Extraer la parte numérica
+                        int creditos = Integer.parseInt(numStr);
+                        if (creditos >= 0 && creditos <= 59) {
+                            modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                            modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        } else {
+                            modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                            modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                        }
                         lexema = "";
                         estadoActual = S;
-                        // No avanzamos i para procesar este carácter en el siguiente estado
                     }
                     break;
 
                 case Q5:
                     // Estado final para créditos (CREdd)
-                    modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
-                    modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    String numStr = lexema.substring(3); // Extraer la parte numérica
+                    int creditos = Integer.parseInt(numStr);
+                    if (creditos >= 0 && creditos <= 59) {
+                        modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    } else {
+                        modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                        modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    }
                     lexema = "";
                     estadoActual = S;
-                    // No avanzamos i para procesar este carácter en el siguiente estado
                     break;
 
                 case Q7:
@@ -224,14 +236,28 @@ public class AnalizadorLexico {
         if (!lexema.isEmpty()) {
             switch (estadoActual) {
                 case Q4:
-                    // Aceptar crédito con un solo dígito (CREx)
-                    modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
-                    modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    // Aceptar crédito con un solo dígito (CREd)
+                    String numStr = lexema.substring(3);
+                    int creditos = Integer.parseInt(numStr);
+                    if (creditos >= 0 && creditos <= 59) {
+                        modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    } else {
+                        modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                        modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    }
                     break;
                 case Q5:
                     // Aceptar crédito con dos dígitos (CREdd)
-                    modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
-                    modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    numStr = lexema.substring(3);
+                    creditos = Integer.parseInt(numStr);
+                    if (creditos >= 0 && creditos <= 59) {
+                        modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    } else {
+                        modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                        modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    }
                     break;
                 case Q7:
                     // Aceptar número entero (d+)
