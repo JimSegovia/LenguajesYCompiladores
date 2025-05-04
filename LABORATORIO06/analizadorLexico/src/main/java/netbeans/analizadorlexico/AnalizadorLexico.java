@@ -5,7 +5,27 @@ import javax.swing.table.DefaultTableModel;
 
 public class AnalizadorLexico {
 
-    // Método que toma la entrada del usuario y realiza el análisis léxico
+    // Estados del autómata
+    private static final int S = 0;
+    private static final int Q1 = 1;
+    private static final int Q2 = 2;
+    private static final int Q3 = 3;
+    private static final int Q4 = 4;
+    private static final int Q5 = 5;
+    private static final int Q7 = 7;
+    private static final int Q8 = 8;
+    private static final int Q9 = 9;
+    private static final int Q11 = 11;
+    private static final int Q12 = 12;
+    private static final int ERROR = -1;
+
+    // Tokens
+    private static final int TOKEN_CREDITO = 100;
+    private static final int TOKEN_ENTERO = 200;
+    private static final int TOKEN_REAL = 201;
+    private static final int TOKEN_OCTAL = 202;
+    private static final int TOKEN_ERROR = 911;
+
     public void analizar(String entrada, JTable tbAnalizadorLexico, JTable tbSimbolos) {
         DefaultTableModel modeloAnalizador = (DefaultTableModel) tbAnalizadorLexico.getModel();
         DefaultTableModel modeloSimbolos = (DefaultTableModel) tbSimbolos.getModel();
@@ -13,137 +33,232 @@ public class AnalizadorLexico {
         modeloAnalizador.setRowCount(0);
         modeloSimbolos.setRowCount(0);
 
-        // Variable para manejar los créditos (CRE)
-        String tokenBuilder = "";
-        boolean esCredito = false;
-        String numeroCredito = "";
+        int estadoActual = S;
+        String lexema = "";
+        int i = 0;
+        int n = entrada.length();
+        boolean octalValido = true; // Bandera para validar dígitos octales
 
-        // Recorrer la entrada para obtener tokens válidos (sin dividir por espacios)
-        for (int i = 0; i < entrada.length(); i++) {
+        while (i < n) {
             char c = entrada.charAt(i);
 
-            // Si es un carácter alfanumérico, agregar al token
-            if (Character.isLetterOrDigit(c)) {
-                tokenBuilder += c;
+            // Ignorar espacios en blanco
+            if (Character.isWhitespace(c)) {
+                i++;
+                continue;
+            }
 
-                // Si el token empieza con "CRE", entonces estamos buscando los créditos
-                if (tokenBuilder.equals("CRE") && !esCredito) {
-                    esCredito = true;  // Iniciar búsqueda del número
-                    numeroCredito = ""; // Limpiar el número anterior
-                }
-
-                // Si ya es un "CRE" y estamos leyendo un número, lo agregamos al número
-                if (esCredito && Character.isDigit(c)) {
-                    numeroCredito += c;
-
-                    // Si ya hemos leído 2 dígitos, procesamos y reiniciamos el "CRE"
-                    if (numeroCredito.length() == 2) {
-                        int creditos = Integer.parseInt(numeroCredito);
-                        if (creditos >= 1 && creditos <= 59) {
-                            modeloAnalizador.addRow(new Object[] {"Créditos de Alumno", "CRE" + numeroCredito, 100});
-                            modeloSimbolos.addRow(new Object[] {"Créditos de Alumno", "CRE" + numeroCredito, 100});
-                        } else {
-                            modeloAnalizador.addRow(new Object[] {"Error", "CRE" + numeroCredito, 911});
-                            modeloSimbolos.addRow(new Object[] {"Error", "CRE" + numeroCredito, 911});
-                        }
-                        tokenBuilder = ""; // Limpiar el token y esperar el siguiente
-                        numeroCredito = ""; // Limpiar el número de créditos
-                        esCredito = false; // Fin de la detección de créditos
+            // Proceso de análisis según el autómata
+            switch (estadoActual) {
+                case S:
+                    if (c == 'C') {
+                        estadoActual = Q1;
+                        lexema += c;
+                        i++;
+                    } else if (Character.isDigit(c)) {
+                        estadoActual = Q7;
+                        lexema += c;
+                        if (c > '7') {
+                        octalValido = false;
+        }
+                        i++;
+                    } else {
+                        // Carácter no válido en estado inicial
+                        modeloAnalizador.addRow(new Object[]{"Error", String.valueOf(c), TOKEN_ERROR});
+                        modeloSimbolos.addRow(new Object[]{"Error", String.valueOf(c), TOKEN_ERROR});
+                        i++;
                     }
-                }
-            } else {
-                // Si encontramos un carácter no alfanumérico, procesamos el token
-                if (tokenBuilder.length() > 0) {
-                    procesarToken(tokenBuilder, modeloAnalizador, modeloSimbolos);
-                    tokenBuilder = "";  // Limpiar el token
-                }
+                    break;
 
-                // Si es un error (como "o0" o cualquier carácter no válido), procesar
-                if (!Character.isWhitespace(c)) {
-                    modeloAnalizador.addRow(new Object[] {"Error", String.valueOf(c), 911});
-                    modeloSimbolos.addRow(new Object[] {"Error", String.valueOf(c), 911});
-                }
+                case Q1:
+                    if (c == 'R') {
+                        estadoActual = Q2;
+                        lexema += c;
+                        i++;
+                    } else {
+                        estadoActual = ERROR;
+                    }
+                    break;
+
+                case Q2:
+                    if (c == 'E') {
+                        estadoActual = Q3;
+                        lexema += c;
+                        i++;
+                    } else {
+                        estadoActual = ERROR;
+                    }
+                    break;
+
+                case Q3:
+                    if (Character.isDigit(c)) {
+                        estadoActual = Q4;
+                        lexema += c;
+                        i++;
+                    } else {
+                        estadoActual = ERROR;
+                    }
+                    break;
+
+                case Q4:
+                    if (Character.isDigit(c)) {
+                        estadoActual = Q5;
+                        lexema += c;
+                        i++;
+                    } else {
+                        // Transición lambda (aceptar con un solo dígito)
+                        modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                        lexema = "";
+                        estadoActual = S;
+                        // No avanzamos i para procesar este carácter en el siguiente estado
+                    }
+                    break;
+
+                case Q5:
+                    // Estado final para créditos (CREdd)
+                    modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    lexema = "";
+                    estadoActual = S;
+                    // No avanzamos i para procesar este carácter en el siguiente estado
+                    break;
+
+                case Q7:
+                    if (Character.isDigit(c)) {
+                        lexema += c;
+                        if (octalValido && c > '7') {
+                            octalValido = false;
+                        }
+                        i++;
+                        // Permanecemos en Q7 (autociclo)
+                    } else if (c == '.') {
+                        estadoActual = Q8;
+                        lexema += c;
+                        i++;
+                        octalValido = false; // Ya no es octal si tiene punto
+                    } else if (c == 'o') {
+                        estadoActual = Q11;
+                        lexema += c;
+                        i++;
+                    } else {
+                        // Estado final para enteros (d+)
+                        modeloAnalizador.addRow(new Object[]{"Entero", lexema, TOKEN_ENTERO});
+                        modeloSimbolos.addRow(new Object[]{"Entero", lexema, TOKEN_ENTERO});
+                        lexema = "";
+                        estadoActual = S;
+                        octalValido = true;
+                    }
+                    break;
+
+                case Q8:
+                    if (Character.isDigit(c)) {
+                        estadoActual = Q9;
+                        lexema += c;
+                        i++;
+                    } else {
+                        estadoActual = ERROR;
+                    }
+                    break;
+
+                case Q9:
+                    if (Character.isDigit(c)) {
+                        lexema += c;
+                        i++;
+                    } else {
+                        // Estado final para reales (d+.d+)
+                        modeloAnalizador.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
+                        modeloSimbolos.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
+                        lexema = "";
+                        estadoActual = S;
+                    }
+                    break;
+
+                case Q11:
+                    if (c == '0') {
+                        estadoActual = Q12;
+                        lexema += c;
+                        i++;
+                    } else {
+                        estadoActual = ERROR;
+                    }
+                    break;
+
+                case Q12:
+                    // Estado final para octales (d+o0)
+                    if (octalValido) {
+                        modeloAnalizador.addRow(new Object[]{"Octal", lexema, TOKEN_OCTAL});
+                        modeloSimbolos.addRow(new Object[]{"Octal", lexema, TOKEN_OCTAL});
+                    } else {
+                        modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                        modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    }
+                    lexema = "";
+                    estadoActual = S;
+                    octalValido = true;
+                    break;
+
+                case ERROR:
+                    // Procesar el error
+                    String errorLexema = lexema + c;
+                    modeloAnalizador.addRow(new Object[]{"Error", errorLexema, TOKEN_ERROR});
+                    modeloSimbolos.addRow(new Object[]{"Error", errorLexema, TOKEN_ERROR});
+                    lexema = "";
+                    estadoActual = S;
+                    octalValido = true;
+                    i++;
+                    break;
+            }
+
+            // Manejar errores de transición
+            if (estadoActual == ERROR) {
+                modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                lexema = "";
+                estadoActual = S;
+                octalValido = true;
             }
         }
 
-        // Procesar el último token si existe
-        if (tokenBuilder.length() > 0) {
-            procesarToken(tokenBuilder, modeloAnalizador, modeloSimbolos);
-        }
-    }
-
-    // Método que procesa un token y lo clasifica
-    private void procesarToken(String token, DefaultTableModel modeloAnalizador, DefaultTableModel modeloSimbolos) {
-        // Procesar CRExx (ahora puede ser con uno o dos dígitos después de CRE)
-        if (token.startsWith("CRE")) {
-            String numeroParte = token.substring(3); // Parte del número después de "CRE"
-            try {
-                int creditos = Integer.parseInt(numeroParte);
-                if (creditos >= 1 && creditos <= 59) {
-                    modeloAnalizador.addRow(new Object[] {"Créditos de Alumno", token, 100});
-                    modeloSimbolos.addRow(new Object[] {"Créditos de Alumno", token, 100});
-                } else {
-                    modeloAnalizador.addRow(new Object[] {"Error", token, 911});
-                    modeloSimbolos.addRow(new Object[] {"Error", token, 911});
-                }
-            } catch (NumberFormatException e) {
-                modeloAnalizador.addRow(new Object[] {"Error", token, 911});
-                modeloSimbolos.addRow(new Object[] {"Error", token, 911});
+        // Procesar cualquier lexema pendiente al final de la entrada
+        if (!lexema.isEmpty()) {
+            switch (estadoActual) {
+                case Q4:
+                    // Aceptar crédito con un solo dígito (CREx)
+                    modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    break;
+                case Q5:
+                    // Aceptar crédito con dos dígitos (CREdd)
+                    modeloAnalizador.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    modeloSimbolos.addRow(new Object[]{"Créditos de Alumno", lexema, TOKEN_CREDITO});
+                    break;
+                case Q7:
+                    // Aceptar número entero (d+)
+                    modeloAnalizador.addRow(new Object[]{"Entero", lexema, TOKEN_ENTERO});
+                    modeloSimbolos.addRow(new Object[]{"Entero", lexema, TOKEN_ENTERO});
+                    break;
+                case Q9:
+                    // Aceptar número real (d+.d+)
+                    modeloAnalizador.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
+                    modeloSimbolos.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
+                    break;
+                case Q12:
+                    if (octalValido) {
+                        modeloAnalizador.addRow(new Object[]{"Octal", lexema, TOKEN_OCTAL});
+                        modeloSimbolos.addRow(new Object[]{"Octal", lexema, TOKEN_OCTAL});
+                    } else {
+                        modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                        modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    }
+                    break;
+                default:
+                    // Cualquier otro caso es error
+                    modeloAnalizador.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    modeloSimbolos.addRow(new Object[]{"Error", lexema, TOKEN_ERROR});
+                    octalValido = true;
+                    break;
             }
         }
-        // Detectar números reales (ej. 7.8)
-        else if (esNumeroReal(token)) {
-            modeloAnalizador.addRow(new Object[] {"Real", token, 201});
-            modeloSimbolos.addRow(new Object[] {"Real", token, 201});
-        }
-        // Detectar números octales (ej. 173o0) y procesar sólo si es válido
-        else if (esNumeroOctal(token)) {
-            String[] parts = token.split("o0");
-            String beforeO = parts[0];  // Número antes del "o0"
-            if (beforeO.matches("[0-7]+")) {
-                modeloAnalizador.addRow(new Object[] {"Octal", token, 202});
-                modeloSimbolos.addRow(new Object[] {"Octal", token, 202});
-            } else {
-                // Si no es octal válido, lo marcamos como error
-                modeloAnalizador.addRow(new Object[] {"Error", token, 911});
-                modeloSimbolos.addRow(new Object[] {"Error", token, 911});
-            }
-        }
-        // Detectar números enteros (ej. 123)
-        else if (esNumeroEntero(token)) {
-            modeloAnalizador.addRow(new Object[] {"Entero", token, 200});
-            modeloSimbolos.addRow(new Object[] {"Entero", token, 200});
-        }
-        // Si no coincide con ninguno de los patrones, marcarlo como error
-        else {
-            modeloAnalizador.addRow(new Object[] {"Error", token, 911});
-            modeloSimbolos.addRow(new Object[] {"Error", token, 911});
-        }
-    }
-
-    // Método para verificar si es un número real
-    private boolean esNumeroReal(String token) {
-        int punto = token.indexOf(".");
-        if (punto != -1) {
-            String entero = token.substring(0, punto);
-            String decimal = token.substring(punto + 1);
-            return !entero.isEmpty() && !decimal.isEmpty() && esNumeroEntero(entero) && esNumeroEntero(decimal);
-        }
-        return false;
-    }
-
-    // Método para verificar si es un número octal (como 173o0)
-    private boolean esNumeroOctal(String token) {
-        return token.endsWith("o0") && esNumeroEntero(token.substring(0, token.length() - 2)) && token.substring(0, token.length() - 2).matches("[0-7]+");
-    }
-
-    // Método para verificar si es un número entero
-    private boolean esNumeroEntero(String token) {
-        for (int i = 0; i < token.length(); i++) {
-            if (!Character.isDigit(token.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 }
