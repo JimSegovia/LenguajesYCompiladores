@@ -4,6 +4,8 @@
  */
 package al_zoolang;
 
+
+import vista.ViewAnalizadorLexico;
 /**
  *
  * @author JimXL
@@ -14,7 +16,12 @@ public class AL_ZOOLANG {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                // Aquí creamos e inicializamos la interfaz gráfica
+                new ViewAnalizadorLexico().setVisible(true);
+            }
+        });
     }
     
 }
