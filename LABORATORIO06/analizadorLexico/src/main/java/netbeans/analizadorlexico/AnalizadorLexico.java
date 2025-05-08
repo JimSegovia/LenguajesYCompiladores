@@ -183,7 +183,7 @@ public class AnalizadorLexico {
                         modeloSimbolos.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
                         lexema = "";
                         estadoActual = S;
-                        octalValido = true; 
+                        octalValido = true;  // ← Añadir esta línea para reiniciar
                     }
                     break;
 
@@ -268,7 +268,7 @@ public class AnalizadorLexico {
                 case Q9:
                     modeloAnalizador.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
                     modeloSimbolos.addRow(new Object[]{"Real", lexema, TOKEN_REAL});
-                    octalValido = true; 
+                    octalValido = true;  // ← Añadir esta línea
                     break;
                 case Q12:
                     if (octalValido) {
