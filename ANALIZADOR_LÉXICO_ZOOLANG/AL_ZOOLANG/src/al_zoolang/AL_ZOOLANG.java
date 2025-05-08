@@ -18,8 +18,13 @@ public class AL_ZOOLANG {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                // Aquí creamos e inicializamos la interfaz gráfica
-                new ViewAnalizadorLexico().setVisible(true);
+                ViewAnalizadorLexico ventana = new ViewAnalizadorLexico();
+    
+                // Centramos la ventana en la pantalla
+                ventana.setLocationRelativeTo(null);
+    
+                // Hacemos visible la ventana
+                ventana.setVisible(true);
             }
         });
     }
