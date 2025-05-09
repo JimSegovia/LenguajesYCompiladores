@@ -140,7 +140,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     modelLexico.addRow(new Object[]{
         descripcion,
         lexema,
-        token,
+        obtenerNombreToken(codigoToken),
         codigoToken
     });
     
