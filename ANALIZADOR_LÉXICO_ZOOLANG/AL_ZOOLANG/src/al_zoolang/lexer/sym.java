@@ -1,6 +1,6 @@
 package al_zoolang.lexer;
 
-public class Tokens {
+public class sym {
     // Palabras reservadas (400-431)
     public static final int INIT_HABIT = 400;
     public static final int MAIN_ZOO = 401;

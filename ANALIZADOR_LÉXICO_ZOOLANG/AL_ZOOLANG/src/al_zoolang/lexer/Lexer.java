@@ -944,7 +944,7 @@ public class Lexer implements java_cup.runtime.Scanner {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
             { System.err.println("Error léxico: '" + yytext() + "' en línea " + (yyline+1) + ", columna " + (yycolumn+1)); 
-      return symbol(Tokens.ERROR);
+      return symbol(sym.ERROR);
             }
           // fall through
           case 69: break;
@@ -954,332 +954,332 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 70: break;
           case 3:
-            { return symbol(Tokens.OP_NO);
+            { return symbol(sym.OP_NO);
             }
           // fall through
           case 71: break;
           case 4:
-            { return symbol(Tokens.PAR_ABIERTO);
+            { return symbol(sym.PAR_ABIERTO);
             }
           // fall through
           case 72: break;
           case 5:
-            { return symbol(Tokens.PAR_CERRADO);
+            { return symbol(sym.PAR_CERRADO);
             }
           // fall through
           case 73: break;
           case 6:
-            { return symbol(Tokens.OP_MULT);
+            { return symbol(sym.OP_MULT);
             }
           // fall through
           case 74: break;
           case 7:
-            { return symbol(Tokens.OP_SUMA);
+            { return symbol(sym.OP_SUMA);
             }
           // fall through
           case 75: break;
           case 8:
-            { return symbol(Tokens.COMA);
+            { return symbol(sym.COMA);
             }
           // fall through
           case 76: break;
           case 9:
-            { return symbol(Tokens.OP_RESTA);
+            { return symbol(sym.OP_RESTA);
             }
           // fall through
           case 77: break;
           case 10:
-            { return symbol(Tokens.PUNTO);
+            { return symbol(sym.PUNTO);
             }
           // fall through
           case 78: break;
           case 11:
-            { return symbol(Tokens.OP_DIV);
+            { return symbol(sym.OP_DIV);
             }
           // fall through
           case 79: break;
           case 12:
-            { return symbol(Tokens.LIT_ENT, Integer.parseInt(yytext()));
+            { return symbol(sym.LIT_ENT, Integer.parseInt(yytext()));
             }
           // fall through
           case 80: break;
           case 13:
-            { return symbol(Tokens.DOS_PUNTOS);
+            { return symbol(sym.DOS_PUNTOS);
             }
           // fall through
           case 81: break;
           case 14:
-            { return symbol(Tokens.PUNTO_COMA);
+            { return symbol(sym.PUNTO_COMA);
             }
           // fall through
           case 82: break;
           case 15:
-            { return symbol(Tokens.OP_MENOR);
+            { return symbol(sym.OP_MENOR);
             }
           // fall through
           case 83: break;
           case 16:
-            { return symbol(Tokens.OP_ASIGN);
+            { return symbol(sym.OP_ASIGN);
             }
           // fall through
           case 84: break;
           case 17:
-            { return symbol(Tokens.OP_MAYOR);
+            { return symbol(sym.OP_MAYOR);
             }
           // fall through
           case 85: break;
           case 18:
-            { return symbol(Tokens.ID_CLASE, yytext());
+            { return symbol(sym.ID_CLASE, yytext());
             }
           // fall through
           case 86: break;
           case 19:
-            { return symbol(Tokens.CORCH_ABIERTO);
+            { return symbol(sym.CORCH_ABIERTO);
             }
           // fall through
           case 87: break;
           case 20:
-            { return symbol(Tokens.CORCH_CERRADO);
+            { return symbol(sym.CORCH_CERRADO);
             }
           // fall through
           case 88: break;
           case 21:
-            { return symbol(Tokens.ID_GLOBAL, yytext());
+            { return symbol(sym.ID_GLOBAL, yytext());
             }
           // fall through
           case 89: break;
           case 22:
-            { return symbol(Tokens.LLAVE_ABIERTA);
+            { return symbol(sym.LLAVE_ABIERTA);
             }
           // fall through
           case 90: break;
           case 23:
-            { return symbol(Tokens.LLAVE_CERRADA);
+            { return symbol(sym.LLAVE_CERRADA);
             }
           // fall through
           case 91: break;
           case 24:
-            { return symbol(Tokens.OP_DIF);
+            { return symbol(sym.OP_DIF);
             }
           // fall through
           case 92: break;
           case 25:
-            { return symbol(Tokens.LIT_STRING, yytext());
+            { return symbol(sym.LIT_STRING, yytext());
             }
           // fall through
           case 93: break;
           case 26:
-            { return symbol(Tokens.OP_INCREMENTO);
+            { return symbol(sym.OP_INCREMENTO);
             }
           // fall through
           case 94: break;
           case 27:
-            { return symbol(Tokens.OP_DECREMENTO);
+            { return symbol(sym.OP_DECREMENTO);
             }
           // fall through
           case 95: break;
           case 28:
-            { return symbol(Tokens.DOBLE_PUNTO);
+            { return symbol(sym.DOBLE_PUNTO);
             }
           // fall through
           case 96: break;
           case 29:
-            { return symbol(Tokens.OP_MENOR_IGUAL);
+            { return symbol(sym.OP_MENOR_IGUAL);
             }
           // fall through
           case 97: break;
           case 30:
-            { return symbol(Tokens.OP_IGUAL);
+            { return symbol(sym.OP_IGUAL);
             }
           // fall through
           case 98: break;
           case 31:
-            { return symbol(Tokens.OP_ASIGN_ARR);
+            { return symbol(sym.OP_ASIGN_ARR);
             }
           // fall through
           case 99: break;
           case 32:
-            { return symbol(Tokens.OP_MAYOR_IGUAL);
+            { return symbol(sym.OP_MAYOR_IGUAL);
             }
           // fall through
           case 100: break;
           case 33:
-            { return symbol(Tokens.ME);
+            { return symbol(sym.ME);
             }
           // fall through
           case 101: break;
           case 34:
-            { return symbol(Tokens.OP_O);
+            { return symbol(sym.OP_O);
             }
           // fall through
           case 102: break;
           case 35:
-            { return symbol(Tokens.OP_Y);
+            { return symbol(sym.OP_Y);
             }
           // fall through
           case 103: break;
           case 36:
-            { return symbol(Tokens.LIT_CHAR, yytext().charAt(1));
+            { return symbol(sym.LIT_CHAR, yytext().charAt(1));
             }
           // fall through
           case 104: break;
           case 37:
-            { return symbol(Tokens.LIT_REAL, Double.parseDouble(yytext()));
+            { return symbol(sym.LIT_REAL, Double.parseDouble(yytext()));
             }
           // fall through
           case 105: break;
           case 38:
-            { return symbol(Tokens.ANT);
+            { return symbol(sym.ANT);
             }
           // fall through
           case 106: break;
           case 39:
-            { return symbol(Tokens.ENT);
+            { return symbol(sym.ENT);
             }
           // fall through
           case 107: break;
           case 40:
-            { return symbol(Tokens.TORT);
+            { return symbol(sym.TORT);
             }
           // fall through
           case 108: break;
           case 41:
-            { return symbol(Tokens.BOUL);
+            { return symbol(sym.BOUL);
             }
           // fall through
           case 109: break;
           case 42:
-            { return symbol(Tokens.CAMA);
+            { return symbol(sym.CAMA);
             }
           // fall through
           case 110: break;
           case 43:
-            { return symbol(Tokens.HUIR);
+            { return symbol(sym.HUIR);
             }
           // fall through
           case 111: break;
           case 44:
-            { return symbol(Tokens.LEON);
+            { return symbol(sym.LEON);
             }
           // fall through
           case 112: break;
           case 45:
-            { return symbol(Tokens.NULO);
+            { return symbol(sym.NULO);
             }
           // fall through
           case 113: break;
           case 46:
-            { return symbol(Tokens.RECI);
+            { return symbol(sym.RECI);
             }
           // fall through
           case 114: break;
           case 47:
-            { return symbol(Tokens.RUGG);
+            { return symbol(sym.RUGG);
             }
           // fall through
           case 115: break;
           case 48:
-            { return symbol(Tokens.FALSO);
+            { return symbol(sym.FALSO);
             }
           // fall through
           case 116: break;
           case 49:
-            { return symbol(Tokens.LIBRE);
+            { return symbol(sym.LIBRE);
             }
           // fall through
           case 117: break;
           case 50:
-            { return symbol(Tokens.MET);
+            { return symbol(sym.MET);
             }
           // fall through
           case 118: break;
           case 51:
-            { return symbol(Tokens.COMPOR);
+            { return symbol(sym.COMPOR);
             }
           // fall through
           case 119: break;
           case 52:
-            { return symbol(Tokens.CORPSE);
+            { return symbol(sym.CORPSE);
             }
           // fall through
           case 120: break;
           case 53:
-            { return symbol(Tokens.RONDAR);
+            { return symbol(sym.RONDAR);
             }
           // fall through
           case 121: break;
           case 54:
-            { return symbol(Tokens.STLORO);
+            { return symbol(sym.STLORO);
             }
           // fall through
           case 122: break;
           case 55:
-            { return symbol(Tokens.VERDAD);
+            { return symbol(sym.VERDAD);
             }
           // fall through
           case 123: break;
           case 56:
-            { return symbol(Tokens.ACCED);
+            { return symbol(sym.ACCED);
             }
           // fall through
           case 124: break;
           case 57:
-            { return symbol(Tokens.MAIN_ZOO);
+            { return symbol(sym.MAIN_ZOO);
             }
           // fall through
           case 125: break;
           case 58:
-            { return symbol(Tokens.MODIF);
+            { return symbol(sym.MODIF);
             }
           // fall through
           case 126: break;
           case 59:
-            { return symbol(Tokens.PROTECT);
+            { return symbol(sym.PROTECT);
             }
           // fall through
           case 127: break;
           case 60:
-            { return symbol(Tokens.DEVOLVER);
+            { return symbol(sym.DEVOLVER);
             }
           // fall through
           case 128: break;
           case 61:
-            { return symbol(Tokens.FIN_HABIT);
+            { return symbol(sym.FIN_HABIT);
             }
           // fall through
           case 129: break;
           case 62:
-            { return symbol(Tokens.INSTINTO);
+            { return symbol(sym.INSTINTO);
             }
           // fall through
           case 130: break;
           case 63:
-            { return symbol(Tokens.MERODEAR);
+            { return symbol(sym.MERODEAR);
             }
           // fall through
           case 131: break;
           case 64:
-            { return symbol(Tokens.REACCION);
+            { return symbol(sym.REACCION);
             }
           // fall through
           case 132: break;
           case 65:
-            { return symbol(Tokens.ENCERRADO);
+            { return symbol(sym.ENCERRADO);
             }
           // fall through
           case 133: break;
           case 66:
-            { return symbol(Tokens.INIT_HABIT);
+            { return symbol(sym.INIT_HABIT);
             }
           // fall through
           case 134: break;
           case 67:
-            { return symbol(Tokens.CLASS_HABIT);
+            { return symbol(sym.CLASS_HABIT);
             }
           // fall through
           case 135: break;
           case 68:
-            { return symbol(Tokens.INSTINTO_FINAL);
+            { return symbol(sym.INSTINTO_FINAL);
             }
           // fall through
           case 136: break;
