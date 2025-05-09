@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.io.StringReader;
 import codigo.Tokens;
+import java.util.HashMap;
+import java.util.Map;
 /**
  *
  * @author ARIAN BEJAR
@@ -36,7 +38,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     tbAnalizadorLexico.setModel(modelLexico);
     
     // Configurar modelo para la tabla de símbolos
-    String[] columnasSimbolos = {"Descripción", "Lexema","Lexico",  "Token"};
+    String[] columnasSimbolos = {"Descripción", "Lexema", "Cantidad", "Token"};
     DefaultTableModel modelSimbolos = new DefaultTableModel(columnasSimbolos, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -90,12 +92,26 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         Tokens token;
         boolean hayErrores = false;
 
+        Map<String, Integer> conteoSimbolos = new HashMap<>();
+        Map<String, Integer> tokenPorLexema = new HashMap<>();
+        Map<String, String> descripcionPorLexema = new HashMap<>();
+
         while ((token = lexer.yylex()) != Tokens.EOF) {
-            procesarToken(lexer, token, modelLexico, modelSimbolos);
+            procesarToken(lexer, token, modelLexico, modelSimbolos, conteoSimbolos, tokenPorLexema, descripcionPorLexema);
             if (token == Tokens.ERROR) {
                 hayErrores = true;
             }
         }
+        
+        for (String lexema : conteoSimbolos.keySet()) {
+        modelSimbolos.addRow(new Object[]{
+            descripcionPorLexema.get(lexema),
+            lexema,
+            conteoSimbolos.get(lexema),
+            tokenPorLexema.get(lexema)
+        });
+    }
+
         
         if (hayErrores) {
             JOptionPane.showMessageDialog(this,
@@ -112,8 +128,11 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     
     
   private void procesarToken(Lexer lexer, Tokens token, 
-                         DefaultTableModel modelLexico, 
-                         DefaultTableModel modelSimbolos) {
+                          DefaultTableModel modelLexico, 
+                           DefaultTableModel modelSimbolos,
+                           Map<String, Integer> conteoSimbolos,
+                           Map<String, Integer> tokenPorLexema,
+                           Map<String, String> descripcionPorLexema) {
     int codigoToken = token.getTokenNumber(); // Usamos el método de tu enum
     String lexema = lexer.getLexema(); // Usamos el getter en lugar del campo directo
     String descripcion = obtenerDescripcionToken(codigoToken);
@@ -125,35 +144,10 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         codigoToken
     });
     
-    if (esSimboloRelevante(codigoToken)) {
-        String tipo = obtenerTipoSimbolo(codigoToken);
-        modelSimbolos.addRow(new Object[]{
-            descripcion,
-            lexema,
-            token,
-            codigoToken
-        });
-    }
-}
+        conteoSimbolos.put(lexema, conteoSimbolos.getOrDefault(lexema, 0) + 1);
+        tokenPorLexema.putIfAbsent(lexema, codigoToken);
+        descripcionPorLexema.putIfAbsent(lexema, descripcion);
     
-    // Métodos auxiliares (sin cambios)
-private boolean esSimboloRelevante(int tokenSym) {
-    return tokenSym == Tokens.ID_VAR.getTokenNumber() || 
-           tokenSym == Tokens.ID_CLASE.getTokenNumber() ||
-           tokenSym == Tokens.LIT_ENT.getTokenNumber() || 
-           tokenSym == Tokens.LIT_REAL.getTokenNumber() ||
-           tokenSym == Tokens.LIT_STRING.getTokenNumber() || 
-           tokenSym == Tokens.LIT_CHAR.getTokenNumber();
-}
-
-private String obtenerTipoSimbolo(int tokenSym) {
-    if (tokenSym == Tokens.ID_VAR.getTokenNumber()) return "ID Variable";
-    if (tokenSym == Tokens.ID_CLASE.getTokenNumber()) return "ID Clase";
-    if (tokenSym == Tokens.LIT_ENT.getTokenNumber()) return "Literal Entero";
-    if (tokenSym == Tokens.LIT_REAL.getTokenNumber()) return "Literal Real";
-    if (tokenSym == Tokens.LIT_STRING.getTokenNumber()) return "Literal Cadena";
-    if (tokenSym == Tokens.LIT_CHAR.getTokenNumber()) return "Literal Carácter";
-    return "Desconocido";
 }
     
     private String obtenerNombreToken(int tokenSym) {
