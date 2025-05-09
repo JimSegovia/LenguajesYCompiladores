@@ -5,13 +5,9 @@
 package vista;
 
 import codigo.Lexer;  // Cambiar de al_zoolang.lexer.Lexer a codigo.Lexer
-import codigo.Tokens;  // Cambiar de al_zoolang.lexer.sym a codigo.Tokens
-import java_cup.runtime.Symbol;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.io.StringReader;
-import javax.swing.SwingConstants; 
-import codigo.LexerToken;
 import codigo.Tokens;
 /**
  *
