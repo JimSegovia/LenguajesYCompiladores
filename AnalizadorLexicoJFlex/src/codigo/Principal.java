@@ -37,7 +37,6 @@ public class Principal {
             }
         } catch (Exception e) {
             System.err.println("Error al generar el lexer:");
-            e.printStackTrace();
         }
     }
 }

@@ -186,7 +186,10 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         case 429: return "VERDAD";
         case 430: return "FALSO";
         case 504: return "LIT_NULO";
-        case 231: return "CHAR";
+        case 480: return "CHAR";
+        case 481: return "SELF";
+        case 482: return "NUEVO";
+        case 483: return "INICIAR";
 
         // Operadores y Símbolos (431-456)
         case 431: return "IGUAL_IGUAL";
@@ -271,7 +274,10 @@ private String obtenerDescripcionToken(int tokenSym) {
         case 429: return "Palabra reservada: verdad (Valor verdadero)";
         case 430: return "Palabra reservada: falso (Valor falso)";
         case 504: return "Palabra reservada: nulo (Valor nulo)";
-        case 231: return "Palabra reservada: char (Tipo carácter)";
+        case 480: return "Palabra reservada: char (Tipo carácter)";
+        case 481: return "Palabra reservada: self ";
+        case 482: return "Palabra reservada: NUEVO ";
+        case 483: return "Palabra reservada: INICIAR ";
 
         // Operadores de comparación (431-432)
         case 431: return "Operador de comparación: Igualdad (==)";
