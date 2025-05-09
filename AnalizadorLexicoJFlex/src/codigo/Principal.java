@@ -28,7 +28,6 @@ public class Principal {
             System.out.println("Generando lexer desde: " + archivo.getAbsolutePath());
             JFlex.Main.generate(archivo);
             
-            // Verificar que se generó el lexer
             File lexerJava = new File("src/codigo/Lexer.java");
             if (lexerJava.exists()) {
                 System.out.println("Lexer generado exitosamente");

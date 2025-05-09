@@ -28,7 +28,7 @@ ID_CLASE    = [A-Z][a-zA-Z0-9_\-]*
 LIT_STRING  = \"([^\"]|\\.)*\"
 LIT_CHAR    = \'([^\']|\\.)\'
 LIT_ENT     = [0-9]+
-LIT_REAL    = [0-9]+\.[0-9]+  // Corregido para aceptar múltiples dígitos después del punto
+LIT_REAL    = [0-9]+\.[0-9]+ 
 
 /* ------------------ Palabras Clave ------------------ */
 %%
@@ -111,6 +111,7 @@ LIT_REAL    = [0-9]+\.[0-9]+  // Corregido para aceptar múltiples dígitos desp
 "."                 { lexema = yytext(); return PUNTO; }
 "="                 { lexema = yytext(); return ASIGNACION; }
 "=>"                { lexema = yytext(); return ASIGNACION_ESPECIAL; }
+
 /* ------------------ Fin de Archivo ------------------ */
 <<EOF>>             { return EOF; }
 /* ------------------ Error ------------------ */

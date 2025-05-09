@@ -1,25 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package vista;
 
-import codigo.Lexer;  // Cambiar de al_zoolang.lexer.Lexer a codigo.Lexer
+import codigo.Lexer;  
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.io.StringReader;
 import codigo.Tokens;
 import java.util.HashMap;
 import java.util.Map;
-/**
- *
- * @author ARIAN BEJAR
- */
+
 public class ViewAnalizadorLexico extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ViewAnalizadorSintatico
-     */
     public ViewAnalizadorLexico() {
         initComponents();
         configurarTablas();
@@ -27,6 +17,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     }
 
     private void configurarTablas() {
+        
     // Configurar modelo para la tabla de análisis léxico
     String[] columnasLexico = {"Descripción", "Lexema",  "Lexico", "Token"};
     DefaultTableModel modelLexico = new DefaultTableModel(columnasLexico, 0) {
@@ -50,6 +41,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
 
     
     private void personalizarTablas() {
+        
         // Personalizar apariencia de las tablas
         tbAnalizadorLexico.getTableHeader().setReorderingAllowed(false);
         tbSimbolos.getTableHeader().setReorderingAllowed(false);
@@ -63,8 +55,6 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         tbSimbolos.getColumnModel().getColumn(1).setPreferredWidth(80);
         tbSimbolos.getColumnModel().getColumn(2).setPreferredWidth(60);
         tbSimbolos.getColumnModel().getColumn(3).setPreferredWidth(5);
-        
-        
     }
     
     public void configurarAnalizador() {
@@ -126,7 +116,6 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     }
 }
     
-    
   private void procesarToken(Lexer lexer, Tokens token, 
                           DefaultTableModel modelLexico, 
                            DefaultTableModel modelSimbolos,
@@ -146,14 +135,15 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     
         conteoSimbolos.put(lexema, conteoSimbolos.getOrDefault(lexema, 0) + 1);
         tokenPorLexema.putIfAbsent(lexema, codigoToken);
-        descripcionPorLexema.putIfAbsent(lexema, descripcion);
-    
+        descripcionPorLexema.putIfAbsent(lexema, descripcion); 
 }
     
     private String obtenerNombreToken(int tokenSym) {
+        
     // Mapeo de tokens a nombres legibles
-    switch(tokenSym) {
-        // Palabras Reservadas (400-431)
+    switch(tokenSym){ 
+        
+        // Palabras Reservadas (400-431)U(480-483)
         case 400: return "INIT_HABIT";
         case 401: return "MAIN_ZOOP";
         case 402: return "FIN_HABIT";
@@ -218,10 +208,8 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         case 454: return "COMA";
         case 455: return "PUNTO";
         case 456: return "PUNTO_PUNTO";
-        case 509: return "ASIGNACION";
-        case 510: return "ASIGNACION_ESPECIAL";
-
-        // Identificadores y Literales (500-510)
+ 
+        // Identificadores y Literales (500-507)
         case 500: return "ID_VAR";
         case 502: return "ID_CLASE";
         case 503: return "LIT_STRING";
@@ -232,6 +220,10 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         // Comentario
         case 508: return "COMENTARIO";
         
+        // Asignación
+        case 509: return "ASIGNACION";
+        case 510: return "ASIGNACION_ESPECIAL";
+        
         // Error
         case 911: return "ERROR";
             
@@ -241,7 +233,8 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
 
 private String obtenerDescripcionToken(int tokenSym) {
     switch(tokenSym) {
-        // Palabras reservadas (400-431)
+        
+        // Palabras reservadas (400-431)U(480-483)
         case 400: return "Palabra reservada: initHabit (Inicio de hábitat)";
         case 401: return "Palabra reservada: mainZoo (Función principal)";
         case 402: return "Palabra reservada: finHabit (Fin de hábitat)";
@@ -319,7 +312,7 @@ private String obtenerDescripcionToken(int tokenSym) {
         case 509: return "Operador de asignación: Igual (=)";
         case 510: return "Operador de asignación: Flecha (=>)";
 
-        // Identificadores y literales (500-510)
+        // Identificadores y literales (500-508)
         case 500: return "Identificador: Variable";
         case 502: return "Identificador: Clase";
         case 503: return "Literal: Cadena de texto";
@@ -333,11 +326,7 @@ private String obtenerDescripcionToken(int tokenSym) {
             
         default: return "Token no clasificado (Código: " + tokenSym + ")";
     }
-
-}
-    
-    
-    
+}  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -551,10 +540,7 @@ private String obtenerDescripcionToken(int tokenSym) {
     DefaultTableModel modelSimbolos = (DefaultTableModel) tbSimbolos.getModel();
     modelLexico.setRowCount(0);
     modelSimbolos.setRowCount(0);
-    
-    // Limpiar el área de texto
     txAreaEntradaDatos.setText("");
-   
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
