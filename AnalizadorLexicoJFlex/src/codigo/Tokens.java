@@ -27,8 +27,9 @@ public enum Tokens {
     LIT_CHAR(505), LIT_ENT(506), LIT_REAL(507),
 
     // Error
-    ERROR(911);
-
+    ERROR(911),
+    EOF(999);
+    
     private final int tokenNumber;
     Tokens(int tokenNumber) {
         this.tokenNumber = tokenNumber;

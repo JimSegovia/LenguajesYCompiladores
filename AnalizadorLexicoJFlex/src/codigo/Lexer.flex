@@ -3,12 +3,21 @@ import static codigo.Tokens.*;
 
 %%
 %class Lexer
+%public
 %unicode
-%type Tokens
+%type Tokens  // Cambiado de LexerToken a Tokens
 %line
 %column
 %{
-    public String lexeme;
+    private  String lexema;  // Variable pública para almacenar el lexema
+    public String getLexema() {
+        return lexema;
+    }
+    
+    // Métodos para acceder a posición
+    public int getLinea() { return yyline; }
+    public int getColumna() { return yycolumn; }
+
 %}
 
 /* ------------------- Expresiones ------------------- */
@@ -19,7 +28,7 @@ ID_CLASE    = [A-Z][a-zA-Z0-9_\-]*
 LIT_STRING  = \"([^\"]|\\.)*\"
 LIT_CHAR    = \'([^\']|\\.)\'
 LIT_ENT     = [0-9]+
-LIT_REAL    = [0-9]+\.[0-9]
+LIT_REAL    = [0-9]+\.[0-9]+  // Corregido para aceptar múltiples dígitos después del punto
 
 /* ------------------ Palabras Clave ------------------ */
 %%
@@ -27,77 +36,77 @@ LIT_REAL    = [0-9]+\.[0-9]
 \/\/[^\n]*                  { /* Comentario de una línea */ }
 \/\*([^*]|\*+[^*/])*\*+\/   { /* Comentario de bloque */ }
 
-"initHabit"         { lexeme = yytext(); return INIT_HABIT; }
-"mainZoo"           { lexeme = yytext(); return MAIN_ZOOP; }
-"finHabit"          { lexeme = yytext(); return FIN_HABIT; }
-"ClassHabit"        { lexeme = yytext(); return CLASS_HABIT; }
-"acced->"           { lexeme = yytext(); return ACCEDER; }
-"modif->"           { lexeme = yytext(); return MODIFICAR; }
-"met->"             { lexeme = yytext(); return METODO; }
-"char"              { lexeme = yytext(); return CHAR; }
-"libre"             { lexeme = yytext(); return LIBRE; }
-"encerrado"         { lexeme = yytext(); return ENCERRADO; }
-"protect"           { lexeme = yytext(); return PROTECT; }
-"compor"            { lexeme = yytext(); return COMPOR; }
-"ent"               { lexeme = yytext(); return ENT; }
-"ant"               { lexeme = yytext(); return ANT; }
-"boul"              { lexeme = yytext(); return BOUL; }
-"corpse"            { lexeme = yytext(); return CORPSE; }
-"stloro"            { lexeme = yytext(); return STLORO; }
-"TORT"              { lexeme = yytext(); return TORT; }
-"devolver"          { lexeme = yytext(); return DEVOLVER; }
-"cama"              { lexeme = yytext(); return CAMA; }
-"leon"              { lexeme = yytext(); return LEON; }
-"merodear"          { lexeme = yytext(); return MERODEAR; }
-"rondar"            { lexeme = yytext(); return RONDAR; }
-"instinto"          { lexeme = yytext(); return INSTINTO; }
-"instintoFinal"     { lexeme = yytext(); return INSTINTO_FINAL; }
-"reaccion"          { lexeme = yytext(); return REACCION; }
-"huir"              { lexeme = yytext(); return HUIR; }
-"verdad"            { lexeme = yytext(); return VERDAD; }
-"falso"             { lexeme = yytext(); return FALSO; }
-"nulo"              { lexeme = yytext(); return LIT_NULO; }
+"initHabit"         { lexema = yytext(); return INIT_HABIT; }
+"mainZoo"           { lexema = yytext(); return MAIN_ZOOP; }
+"finHabit"          { lexema = yytext(); return FIN_HABIT; }
+"ClassHabit"        { lexema = yytext(); return CLASS_HABIT; }
+"acced->"           { lexema = yytext(); return ACCEDER; }
+"modif->"           { lexema = yytext(); return MODIFICAR; }
+"met->"             { lexema = yytext(); return METODO; }
+"char"              { lexema = yytext(); return CHAR; }
+"libre"             { lexema = yytext(); return LIBRE; }
+"encerrado"         { lexema = yytext(); return ENCERRADO; }
+"protect"           { lexema = yytext(); return PROTECT; }
+"compor"            { lexema = yytext(); return COMPOR; }
+"ent"               { lexema = yytext(); return ENT; }
+"ant"               { lexema = yytext(); return ANT; }
+"boul"              { lexema = yytext(); return BOUL; }
+"corpse"            { lexema = yytext(); return CORPSE; }
+"stloro"            { lexema = yytext(); return STLORO; }
+"TORT"              { lexema = yytext(); return TORT; }
+"devolver"          { lexema = yytext(); return DEVOLVER; }
+"cama"              { lexema = yytext(); return CAMA; }
+"leon"              { lexema = yytext(); return LEON; }
+"merodear"          { lexema = yytext(); return MERODEAR; }
+"rondar"            { lexema = yytext(); return RONDAR; }
+"instinto"          { lexema = yytext(); return INSTINTO; }
+"instintoFinal"     { lexema = yytext(); return INSTINTO_FINAL; }
+"reaccion"          { lexema = yytext(); return REACCION; }
+"huir"              { lexema = yytext(); return HUIR; }
+"verdad"            { lexema = yytext(); return VERDAD; }
+"falso"             { lexema = yytext(); return FALSO; }
+"nulo"              { lexema = yytext(); return LIT_NULO; }
 
 /* ------------------ Literales ------------------ */
-{LIT_STRING}         { lexeme = yytext(); return LIT_STRING; }
-{LIT_CHAR}           { lexeme = yytext(); return LIT_CHAR; }
-{LIT_ENT}            { lexeme = yytext(); return LIT_ENT; }
-{LIT_REAL}           { lexeme = yytext(); return LIT_REAL; }
+{LIT_STRING}         { lexema = yytext(); return LIT_STRING; }
+{LIT_CHAR}           { lexema = yytext(); return LIT_CHAR; }
+{LIT_ENT}            { lexema = yytext(); return LIT_ENT; }
+{LIT_REAL}           { lexema = yytext(); return LIT_REAL; }
 
 /* ------------------ Identificadores ------------------ */
-{ID_CLASE}           { lexeme = yytext(); return ID_CLASE; }
-{ID_VAR}             { lexeme = yytext(); return ID_VAR; }
+{ID_CLASE}           { lexema = yytext(); return ID_CLASE; }
+{ID_VAR}             { lexema = yytext(); return ID_VAR; }
 
 /* ------------------ Operadores y Símbolos ------------------ */
-"=="                { lexeme = yytext(); return IGUAL_IGUAL; }
-"!="                { lexeme = yytext(); return DIFERENTE; }
-"<="                { lexeme = yytext(); return MENOR_IGUAL; }
-"<"                 { lexeme = yytext(); return MENOR; }
-">="                { lexeme = yytext(); return MAYOR_IGUAL; }
-">"                 { lexeme = yytext(); return MAYOR; }
-"y¡"                { lexeme = yytext(); return AND; }
-"o¡"                { lexeme = yytext(); return OR; }
-"!"                 { lexeme = yytext(); return NOT; }
-"+"                 { lexeme = yytext(); return SUMA; }
-"-"                 { lexeme = yytext(); return RESTA; }
-"*"                 { lexeme = yytext(); return MULTIPLICACION; }
-"/"                 { lexeme = yytext(); return DIVISION; }
-"++"                { lexeme = yytext(); return INCREMENTO; }
-"--"                { lexeme = yytext(); return DECREMENTO; }
-"("                 { lexeme = yytext(); return PARENTESIS_IZQ; }
-")"                 { lexeme = yytext(); return PARENTESIS_DER; }
-"{"                 { lexeme = yytext(); return LLAVE_IZQ; }
-"}"                 { lexeme = yytext(); return LLAVE_DER; }
-"["                 { lexeme = yytext(); return CORCHETE_IZQ; }
-"]"                 { lexeme = yytext(); return CORCHETE_DER; }
-";"                 { lexeme = yytext(); return PUNTO_COMA; }
-":"                 { lexeme = yytext(); return DOS_PUNTOS; }
-","                 { lexeme = yytext(); return COMA; }
-".."                { lexeme = yytext(); return PUNTO_PUNTO; }
-"."                 { lexeme = yytext(); return PUNTO; }
-"="                 { lexeme = yytext(); return ASIGNACION; }
-"=>"                { lexeme = yytext(); return ASIGNACION_ESPECIAL; }
-
+"=="                { lexema = yytext(); return IGUAL_IGUAL; }
+"!="                { lexema = yytext(); return DIFERENTE; }
+"<="                { lexema = yytext(); return MENOR_IGUAL; }
+"<"                 { lexema = yytext(); return MENOR; }
+">="                { lexema = yytext(); return MAYOR_IGUAL; }
+">"                 { lexema = yytext(); return MAYOR; }
+"y¡"                { lexema = yytext(); return AND; }
+"o¡"                { lexema = yytext(); return OR; }
+"!"                 { lexema = yytext(); return NOT; }
+"+"                 { lexema = yytext(); return SUMA; }
+"-"                 { lexema = yytext(); return RESTA; }
+"*"                 { lexema = yytext(); return MULTIPLICACION; }
+"/"                 { lexema = yytext(); return DIVISION; }
+"++"                { lexema = yytext(); return INCREMENTO; }
+"--"                { lexema = yytext(); return DECREMENTO; }
+"("                 { lexema = yytext(); return PARENTESIS_IZQ; }
+")"                 { lexema = yytext(); return PARENTESIS_DER; }
+"{"                 { lexema = yytext(); return LLAVE_IZQ; }
+"}"                 { lexema = yytext(); return LLAVE_DER; }
+"["                 { lexema = yytext(); return CORCHETE_IZQ; }
+"]"                 { lexema = yytext(); return CORCHETE_DER; }
+";"                 { lexema = yytext(); return PUNTO_COMA; }
+":"                 { lexema = yytext(); return DOS_PUNTOS; }
+","                 { lexema = yytext(); return COMA; }
+".."                { lexema = yytext(); return PUNTO_PUNTO; }
+"."                 { lexema = yytext(); return PUNTO; }
+"="                 { lexema = yytext(); return ASIGNACION; }
+"=>"                { lexema = yytext(); return ASIGNACION_ESPECIAL; }
+/* ------------------ Fin de Archivo ------------------ */
+<<EOF>>             { return EOF; }
 /* ------------------ Error ------------------ */
-.                   { return ERROR; }
-
+.                   { lexema = yytext(); return ERROR; }
