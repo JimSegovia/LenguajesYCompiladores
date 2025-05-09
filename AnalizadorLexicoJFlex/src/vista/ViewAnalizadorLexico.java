@@ -30,7 +30,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
 
     private void configurarTablas() {
     // Configurar modelo para la tabla de análisis léxico
-    String[] columnasLexico = {"Descripción", "Lexema", "Token"};
+    String[] columnasLexico = {"Descripción", "Lexema",  "Lexico", "Token"};
     DefaultTableModel modelLexico = new DefaultTableModel(columnasLexico, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -40,7 +40,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     tbAnalizadorLexico.setModel(modelLexico);
     
     // Configurar modelo para la tabla de símbolos
-    String[] columnasSimbolos = {"Descripción", "Lexema", "Token"};
+    String[] columnasSimbolos = {"Descripción", "Lexema","Lexico",  "Token"};
     DefaultTableModel modelSimbolos = new DefaultTableModel(columnasSimbolos, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -59,15 +59,19 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
         // Ajustar anchos de columnas
         tbAnalizadorLexico.getColumnModel().getColumn(0).setPreferredWidth(200);
         tbAnalizadorLexico.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tbAnalizadorLexico.getColumnModel().getColumn(2).setPreferredWidth(20);
-        
-        tbSimbolos.getColumnModel().getColumn(0).setPreferredWidth(200);
+        tbAnalizadorLexico.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tbAnalizadorLexico.getColumnModel().getColumn(3).setPreferredWidth(5);
+        tbSimbolos.getColumnModel().getColumn(0).setPreferredWidth(160);
         tbSimbolos.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tbSimbolos.getColumnModel().getColumn(2).setPreferredWidth(20);
+        tbSimbolos.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tbSimbolos.getColumnModel().getColumn(3).setPreferredWidth(5);
+        
+        
     }
     
     public void configurarAnalizador() {
         btnAnalizar.addActionListener(e -> analizarCodigo());
+        btnLimpiar.addActionListener(e -> analizarCodigo());
     }
     
     private void analizarCodigo() {
@@ -110,6 +114,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     }
 }
     
+    
   private void procesarToken(Lexer lexer, Tokens token, 
                          DefaultTableModel modelLexico, 
                          DefaultTableModel modelSimbolos) {
@@ -120,7 +125,8 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
     modelLexico.addRow(new Object[]{
         descripcion,
         lexema,
-        codigoToken,
+        token,
+        codigoToken
     });
     
     if (esSimboloRelevante(codigoToken)) {
@@ -129,6 +135,7 @@ public class ViewAnalizadorLexico extends javax.swing.JFrame {
             descripcion,
             lexema,
             token,
+            codigoToken
         });
     }
 }
@@ -175,10 +182,13 @@ private String obtenerTipoSimbolo(int tokenSym) {
         case 415: return "STLORO";
         case 416: return "TORT";
         case 417: return "DEVOLVER";
+        case 418: return "RUGIR";
+        case 419: return "RECI";
         case 420: return "CAMA";
         case 421: return "LEON";
         case 422: return "MERODEAR";
         case 423: return "RONDAR";
+        case 424: return "ME";
         case 425: return "INSTINTO";
         case 426: return "INSTINTO_FINAL";
         case 427: return "REACCION";
@@ -226,6 +236,9 @@ private String obtenerTipoSimbolo(int tokenSym) {
         case 506: return "LIT_ENT";
         case 507: return "LIT_REAL";
 
+        // Comentario
+        case 508: return "COMENTARIO";
+        
         // Error
         case 911: return "ERROR";
             
@@ -254,10 +267,13 @@ private String obtenerDescripcionToken(int tokenSym) {
         case 415: return "Palabra reservada: stloro (Tipo stloro)";
         case 416: return "Palabra reservada: TORT (Tipo TORT)";
         case 417: return "Palabra reservada: devolver (Devolver valor)";
+        case 418: return "Palabra reservada: rugg ";
+        case 419: return "Palabra reservada: reci";
         case 420: return "Palabra reservada: cama";
         case 421: return "Palabra reservada: leon";
         case 422: return "Palabra reservada: merodear";
         case 423: return "Palabra reservada: rondar";
+        case 424: return "Palabra reservada: me";
         case 425: return "Palabra reservada: instinto";
         case 426: return "Palabra reservada: instintoFinal";
         case 427: return "Palabra reservada: reaccion";
@@ -314,6 +330,7 @@ private String obtenerDescripcionToken(int tokenSym) {
         case 505: return "Literal: Carácter";
         case 506: return "Literal: Número entero";
         case 507: return "Literal: Número real";
+        case 508: return "Comentario en Bloque";
 
         // Error
         case 911: return "ERROR LÉXICO: Símbolo no reconocido";
@@ -331,9 +348,7 @@ private String obtenerDescripcionToken(int tokenSym) {
 
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        unmsm = new javax.swing.JLabel();
         btnAnalizar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -344,6 +359,10 @@ private String obtenerDescripcionToken(int tokenSym) {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tbAnalizadorLexico = new javax.swing.JTable();
+        btnLimpiar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        unmsm = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -352,17 +371,16 @@ private String obtenerDescripcionToken(int tokenSym) {
         jPanel1.setBackground(new java.awt.Color(0, 51, 51));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 36)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("ANALIZADOR LÉXICO ZOOLANG");
-
         jSeparator1.setBackground(new java.awt.Color(0, 153, 153));
-
-        unmsm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/UNMSMnew.png"))); // NOI18N
 
         btnAnalizar.setBackground(new java.awt.Color(0, 153, 153));
         btnAnalizar.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 18)); // NOI18N
         btnAnalizar.setText("ANALIZAR");
+        btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -407,17 +425,52 @@ private String obtenerDescripcionToken(int tokenSym) {
         ));
         jScrollPane3.setViewportView(tbAnalizadorLexico);
 
+        btnLimpiar.setBackground(new java.awt.Color(255, 0, 0));
+        btnLimpiar.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 18)); // NOI18N
+        btnLimpiar.setText("LIMPIAR");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel2.setAutoscrolls(true);
+
+        unmsm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/UNMSMnew.png"))); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("ANALIZADOR LÉXICO ZOOLANG");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(unmsm, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87)
+                .addComponent(jLabel2)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(unmsm, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(34, 34, 34)))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(121, 121, 121)
-                .addComponent(unmsm, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -427,52 +480,55 @@ private String obtenerDescripcionToken(int tokenSym) {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1)
+                                .addGap(299, 299, 299))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 817, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                                .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jScrollPane3)
+                                .addGap(67, 67, 67)
+                                .addComponent(jScrollPane2)))
                         .addGap(48, 48, 48))))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(121, 121, 121)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(181, 181, 181)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addGap(205, 205, 205))
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addGap(438, 438, 438)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                        .addGap(205, 205, 205))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(unmsm, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2)
-                        .addGap(40, 40, 40)))
+                .addGap(12, 12, 12)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4))))
-                .addGap(18, 18, 18)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                    .addComponent(btnAnalizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(4, 4, 4)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -483,13 +539,27 @@ private String obtenerDescripcionToken(int tokenSym) {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
+    
+    }//GEN-LAST:event_btnAnalizarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+     // Limpiar las tablas
+    DefaultTableModel modelLexico = (DefaultTableModel) tbAnalizadorLexico.getModel();
+    DefaultTableModel modelSimbolos = (DefaultTableModel) tbSimbolos.getModel();
+    modelLexico.setRowCount(0);
+    modelSimbolos.setRowCount(0);
+    
+    // Limpiar el área de texto
+    txAreaEntradaDatos.setText("");
+   
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -529,12 +599,14 @@ private String obtenerDescripcionToken(int tokenSym) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnAnalizar;
+    public javax.swing.JButton btnLimpiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

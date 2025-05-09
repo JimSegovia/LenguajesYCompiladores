@@ -33,8 +33,7 @@ LIT_REAL    = [0-9]+\.[0-9]+  // Corregido para aceptar múltiples dígitos desp
 /* ------------------ Palabras Clave ------------------ */
 %%
 {espacio}                   { /* Ignorar espacios */ }
-\/\/[^\n]*                  { /* Comentario de una línea */ }
-\/\*([^*]|\*+[^*/])*\*+\/   { /* Comentario de bloque */ }
+"/*"([^*]|\*+[^*/])*"*/"    {lexema = yytext(); return COMENTARIO;}
 
 "initHabit"         { lexema = yytext(); return INIT_HABIT; }
 "mainZoo"           { lexema = yytext(); return MAIN_ZOOP; }
@@ -55,10 +54,13 @@ LIT_REAL    = [0-9]+\.[0-9]+  // Corregido para aceptar múltiples dígitos desp
 "stloro"            { lexema = yytext(); return STLORO; }
 "TORT"              { lexema = yytext(); return TORT; }
 "devolver"          { lexema = yytext(); return DEVOLVER; }
+"rugg"              { lexema = yytext(); return RUGIR; }
+"reci"              { lexema = yytext(); return RECI; }
 "cama"              { lexema = yytext(); return CAMA; }
 "leon"              { lexema = yytext(); return LEON; }
 "merodear"          { lexema = yytext(); return MERODEAR; }
 "rondar"            { lexema = yytext(); return RONDAR; }
+"me"                { lexema = yytext(); return ME; }
 "instinto"          { lexema = yytext(); return INSTINTO; }
 "instintoFinal"     { lexema = yytext(); return INSTINTO_FINAL; }
 "reaccion"          { lexema = yytext(); return REACCION; }
