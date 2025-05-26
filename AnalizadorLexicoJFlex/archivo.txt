@@ -1,1 +1,0 @@
-initHabit {     ent x = 5; } finHabit
