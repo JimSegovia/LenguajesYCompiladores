@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
 
-
 public class ADP_SW extends JFrame {
     private JTextArea inputArea;
     private JButton analyzeButton;
@@ -20,7 +19,7 @@ public class ADP_SW extends JFrame {
 
     public ADP_SW() {
         setTitle("Analizador Sintáctico Predictivo - switch-case");
-        setSize(900, 500);
+        setSize(1350, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -46,84 +45,79 @@ public class ADP_SW extends JFrame {
     }
 
     private void analizar() {
-    model.setRowCount(0); // Limpiar tabla
-    stepCounter = 1; // Reiniciar contador de pasos
-    String entrada = inputArea.getText();
-    List<String> tokens = tokenizar(entrada);
-    tokens.add("$");
+        model.setRowCount(0); // Limpiar tabla
+        stepCounter = 1; // Reiniciar contador de pasos
+        String entrada = inputArea.getText();
+        List<String> tokens = tokenizar(entrada);
+        tokens.add("$");
 
-    Deque<String> pila = new ArrayDeque<>();
-    pila.push("$");
-    pila.push("S");
+        Deque<String> pila = new ArrayDeque<>();
+        pila.push("$");
+        pila.push("S");
 
-    int i = 0;
+        int i = 0;
 
-    try {
-        while (!pila.isEmpty()) {
-            String top = pila.pop();
-            String current = tokens.get(i);
+        try {
+            while (!pila.isEmpty()) {
+                String top = pila.pop();
+                String current = tokens.get(i);
 
-            if (top.equals("$") && current.equals("$")) {
-                model.addRow(new Object[]{stepCounter++, "$", "$", "SE ACEPTA"});
-                break;
-            }
-
-            if (isTerminal(top)) {
-                if (top.equals(current)) {
-                    // Mostrar coincidencia antes de consumir
-                    model.addRow(new Object[]{
-                        stepCounter++,
-                        pilaToString(pila),  // Pila antes de consumir
-                        entradaDesde(tokens, i),
-                        "Coincidencia: " + top
-                    });
-
-                    i++;  // Avanzar en la entrada
-                } else {
-                    throw new Exception("Se esperaba '" + top + "', se encontró '" + current + "'");
+                if (top.equals("$") && current.equals("$")) {
+                    model.addRow(new Object[]{stepCounter++, pilaConTopToString(pila, top), "$", "SE ACEPTA"});
+                    break;
                 }
-            } else {
-                String prod = getProduction(top, current);
-                if (prod == null) {
-                    throw new Exception("No hay producción para (" + top + ", " + current + ")");
-                } else {
-                    // Mostrar la producción aplicada
-                    model.addRow(new Object[]{
-                        stepCounter++,
-                        pilaToString(pila),
-                        entradaDesde(tokens, i),
-                        top + " → " + prod
-                    });
 
-                    // Descomponer la producción y empujarla a la pila
-                    String[] parts = prod.split(" ");
-                    for (int j = parts.length - 1; j >= 0; j--) {
-                        if (!parts[j].equals("λ")) {
-                            pila.push(parts[j]);
+                if (isTerminal(top)) {
+                    if (top.equals(current)) {
+                        model.addRow(new Object[]{
+                            stepCounter++,
+                            pilaConTopToString(pila, top),  // Mostrar pila incluyendo top
+                            entradaDesde(tokens, i),
+                            "Coincidencia: " + top
+                        });
+
+                        i++;  // Avanzar en la entrada
+                    } else {
+                        throw new Exception("Se esperaba '" + top + "', se encontró '" + current + "'");
+                    }
+                } else {
+                    String prod = getProduction(top, current);
+                    if (prod == null) {
+                        throw new Exception("No hay producción para (" + top + ", " + current + ")");
+                    } else {
+                        model.addRow(new Object[]{
+                            stepCounter++,
+                            pilaConTopToString(pila, top), // Mostrar pila incluyendo top
+                            entradaDesde(tokens, i),
+                            top + " → " + prod
+                        });
+
+                        String[] parts = prod.split(" ");
+                        for (int j = parts.length - 1; j >= 0; j--) {
+                            if (!parts[j].equals("λ")) {
+                                pila.push(parts[j]);
+                            }
                         }
                     }
                 }
             }
-        }
-    } catch (Exception ex) {
-        model.addRow(new Object[]{"", "", "", "X " + ex.getMessage()});
-    }
-}
-
-private void empilar(String prod, Deque<String> pila) {
-    String[] parts = prod.split(" ");
-    for (int j = parts.length - 1; j >= 0; j--) {
-        if (!parts[j].equals("λ")) {
-            pila.push(parts[j]);
+        } catch (Exception ex) {
+            model.addRow(new Object[]{"", "", "", "X " + ex.getMessage()});
         }
     }
-}
 
-private String pilaToString(Deque<String> pila) {
-    List<String> temp = new ArrayList<>(pila);
-    Collections.reverse(temp); // Mostrar la pila en el orden original
-    return String.join(" ", temp);
-}
+    private String pilaConTopToString(Deque<String> pila, String top) {
+        List<String> temp = new ArrayList<>(pila);
+        Collections.reverse(temp);
+        temp.add(top); // agregar el símbolo actual al tope para que se vea
+        return String.join(" ", temp);
+    }
+
+    private String pilaToString(Deque<String> pila) {
+        List<String> temp = new ArrayList<>(pila);
+        Collections.reverse(temp); // Mostrar la pila en el orden original
+        return String.join(" ", temp);
+    }
 
     private String entradaDesde(List<String> tokens, int i) {
         return String.join(" ", tokens.subList(i, tokens.size()));
@@ -134,19 +128,20 @@ private String pilaToString(Deque<String> pila) {
     }
 
     private String getProduction(String vn, String vt) {
-    if (vn.equals("S") && vt.equals("switch")) return "SWITCH MASSWITCH";
-    if (vn.equals("SWITCH") && vt.equals("switch")) return "switch ( id ) { MASCASES }"; // Esta producción debe retornarse cuando sea necesario
-    if (vn.equals("MASSWITCH") && vt.equals("switch")) return "SWITCH MASSWITCH";
-    if (vn.equals("MASSWITCH") && (vt.equals("}") || vt.equals("$"))) return "λ";
-    if (vn.equals("MASCASES") && vt.equals("case")) return "CASES MASCASES";
-    if (vn.equals("MASCASES") && vt.equals("}")) return "λ";
-    if (vn.equals("CASES") && vt.equals("case")) return "case OPC : MASSWITCH break ;";
-    if (vn.equals("OPC") && vt.equals("num")) return "num RANGE";
-    if (vn.equals("RANGE") && vt.equals("..")) return ".. num";
-    if (vn.equals("RANGE") && vt.equals(":")) return "λ";
-    if (vn.equals("MASSWITCH") && vt.equals("break")) return "λ";
-    return null;
-}
+        if (vn.equals("S") && vt.equals("switch")) return "SWITCH MASSWITCH";
+        if (vn.equals("SWITCH") && vt.equals("switch")) return "switch ( id ) { MASCASES }";
+        if (vn.equals("MASSWITCH") && vt.equals("switch")) return "SWITCH MASSWITCH";
+        if (vn.equals("MASSWITCH") && (vt.equals("}") || vt.equals("$"))) return "λ";
+        if (vn.equals("MASCASES") && vt.equals("case")) return "CASES MASCASES";
+        if (vn.equals("MASCASES") && vt.equals("}")) return "λ";
+        if (vn.equals("CASES") && vt.equals("case")) return "case OPC : MASSWITCH break ;";
+        if (vn.equals("OPC") && vt.equals("num")) return "num RANGE";
+        if (vn.equals("RANGE") && vt.equals("..")) return ".. num";
+        if (vn.equals("RANGE") && vt.equals(":")) return "λ";
+        if (vn.equals("MASSWITCH") && vt.equals("break")) return "λ";
+        return null;
+    }
+
     private List<String> tokenizar(String entrada) {
         List<String> toks = new ArrayList<>();
         String[] palabras = entrada.replace("(", " ( ")
@@ -160,8 +155,8 @@ private String pilaToString(Deque<String> pila) {
 
         for (String palabra : palabras) {
             if (palabra.equals("switch") || palabra.equals("case") || palabra.equals("break") ||
-                palabra.equals("(") || palabra.equals(")") || palabra.equals("{") || palabra.equals("}") ||
-                palabra.equals(":") || palabra.equals(";") || palabra.equals("..")) {
+                    palabra.equals("(") || palabra.equals(")") || palabra.equals("{") || palabra.equals("}") ||
+                    palabra.equals(":") || palabra.equals(";") || palabra.equals("..")) {
                 toks.add(palabra);
             } else if (palabra.matches("\\d+")) {
                 toks.add("num");
