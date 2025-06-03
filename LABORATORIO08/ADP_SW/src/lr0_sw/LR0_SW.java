@@ -29,22 +29,17 @@ public class LR0_SW extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Configuración del área de entrada
         inputArea = new JTextArea(5, 50);
-        
-        // Botón de análisis
-        analyzeButton = new JButton("Analizar Código");
+                analyzeButton = new JButton("Analizar Código");
 
-        // Configuración del modelo de tabla
         model = new DefaultTableModel(new Object[]{"No.", "PILA", "ENTRADA", "ACCIÓN"}, 0);
         table = new JTable(model);
         table.setRowHeight(25);
         
-        // Ajustar tamaño de columnas
         TableColumn column = table.getColumnModel().getColumn(0);
-        column.setPreferredWidth(40);  // Columna No. más pequeña
+        column.setPreferredWidth(40);  
         column = table.getColumnModel().getColumn(1);
-        column.setPreferredWidth(500); // Columna PILA más grande
+        column.setPreferredWidth(500); 
         column = table.getColumnModel().getColumn(2);
         column.setPreferredWidth(300);
         column = table.getColumnModel().getColumn(3);
@@ -69,7 +64,6 @@ public class LR0_SW extends JFrame {
     }
 
     private void initializeTables() {
-        // Inicializar tabla ACTION (acciones)
         actionTable = new HashMap<>();
         
         // Estado 0
@@ -207,8 +201,8 @@ public class LR0_SW extends JFrame {
 
 
     private void analyzeAll() {
-        model.setRowCount(0); // Limpiar tabla
-        stepCounter = 1;      // Reiniciar contador
+        model.setRowCount(0); 
+        stepCounter = 1;    
         initializeAnalysis();
         
         while (!analysisComplete) {
@@ -218,7 +212,7 @@ public class LR0_SW extends JFrame {
             String action = getAction(stackTop, currentToken);
             
             if (action == null) {
-                model.addRow(new Object[]{stepCounter++, stackToString(), remainingInput(), "ERROR: No hay acción definida"});
+                model.addRow(new Object[]{stepCounter++, stackToString(), remainingInput(), "ERROR: No hay acciones"});
                 analysisComplete = true;
                 return;
             }
@@ -257,7 +251,7 @@ public class LR0_SW extends JFrame {
                     "REDUCIR: " + lhs + " → " + production[1]
                 });
                 
-                // Sacar 2*|β| elementos de la pila
+                // Sacar elementos de la pila
                 int popCount = rhs.length;
                 if (rhs[0].equals("λ")) {
                     popCount = 0;
