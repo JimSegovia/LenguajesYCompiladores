@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="ADP_SW" default="default" basedir=".">
-    <description>Builds, tests, and runs the project ADP_SW.</description>
+<project name="LR0_SW" default="default" basedir=".">
+    <description>Builds, tests, and runs the project LR0_SW.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -58,7 +58,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="ADP_SW-impl.jar">
+        <target name="run" depends="LR0_SW-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>

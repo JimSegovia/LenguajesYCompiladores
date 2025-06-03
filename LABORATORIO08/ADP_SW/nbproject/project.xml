@@ -3,8 +3,7 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>ADP_SW</name>
-            <explicit-platform explicit-source-supported="true"/>
+            <name>LR0_SW</name>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
