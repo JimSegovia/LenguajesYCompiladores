@@ -34,7 +34,6 @@ public class LR0_SW extends JFrame {
 
         model = new DefaultTableModel(new Object[]{"No.", "PILA", "ENTRADA", "ACCIÓN"}, 0);
         table = new JTable(model);
-        table.setRowHeight(25);
         
         TableColumn column = table.getColumnModel().getColumn(0);
         column.setPreferredWidth(40);  
