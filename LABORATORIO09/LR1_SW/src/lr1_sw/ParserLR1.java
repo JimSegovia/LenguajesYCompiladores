@@ -331,9 +331,7 @@ public class ParserLR1 {
         gotoTable.computeIfAbsent(44, k -> new HashMap<>()).put("DEFAULT", 46);
 
         // Estado 45
-        gotoTable.computeIfAbsent(45, k -> new HashMap<>()).put("DEFAULT", 47);
-        
-        
+        gotoTable.computeIfAbsent(45, k -> new HashMap<>()).put("DEFAULT", 47); 
         
     }
 }
