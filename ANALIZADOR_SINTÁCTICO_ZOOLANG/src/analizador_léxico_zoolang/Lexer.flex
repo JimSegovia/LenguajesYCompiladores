@@ -22,13 +22,11 @@ import static analizador_léxico_zoolang.Tokens.*;
 
 /* ------------------- Expresiones ------------------- */
 espacio     = [ \t\r\n]+
-LineTerminator = \r|\n|\r\n
-ID_VAR      = [a-z_][a-zA-Z0-9_\-]*
-ID_CLASE    = [A-Z][a-zA-Z0-9_\-]*
-LIT_STRING  = \"([^\"]|\\.)*\"
-LIT_CHAR    = \'([^\']|\\.)\'
-LIT_ENT     = [0-9]+
-LIT_REAL    = [0-9]+\.[0-9]+ 
+id      = [a-zA-Z][a-zA-Z0-9_\-]*
+lit_str  = \"([^\"]|\\.)*\"
+lit_char    = \'([^\']|\\.)\'
+lit_ent     = [0-9]+
+lit_decimal    = [0-9]+\.[0-9]+ 
 
 /* ------------------ Palabras Clave ------------------ */
 %%
@@ -42,10 +40,6 @@ LIT_REAL    = [0-9]+\.[0-9]+
 "acced->"           { lexema = yytext(); return ACCEDER; }
 "modif->"           { lexema = yytext(); return MODIFICAR; }
 "met->"             { lexema = yytext(); return METODO; }
-"char"              { lexema = yytext(); return CHAR; }
-"self"              { lexema = yytext(); return SELF; }
-"NUEVO"             { lexema = yytext(); return NUEVO; }
-"INICIAR"           { lexema = yytext(); return INICIAR; }
 "libre"             { lexema = yytext(); return LIBRE; }
 "encerrado"         { lexema = yytext(); return ENCERRADO; }
 "protect"           { lexema = yytext(); return PROTECT; }
@@ -55,6 +49,10 @@ LIT_REAL    = [0-9]+\.[0-9]+
 "boul"              { lexema = yytext(); return BOUL; }
 "corpse"            { lexema = yytext(); return CORPSE; }
 "stloro"            { lexema = yytext(); return STLORO; }
+"char"              { lexema = yytext(); return CHAR; }
+"self"              { lexema = yytext(); return SELF; }
+"NUEVO"             { lexema = yytext(); return NUEVO; }
+"INICIAR"           { lexema = yytext(); return INICIAR; }
 "TORT"              { lexema = yytext(); return TORT; }
 "devolver"          { lexema = yytext(); return DEVOLVER; }
 "rugg"              { lexema = yytext(); return RUGIR; }
@@ -70,17 +68,15 @@ LIT_REAL    = [0-9]+\.[0-9]+
 "huir"              { lexema = yytext(); return HUIR; }
 "verdad"            { lexema = yytext(); return VERDAD; }
 "falso"             { lexema = yytext(); return FALSO; }
-"nulo"              { lexema = yytext(); return LIT_NULO; }
 
 /* ------------------ Literales ------------------ */
-{LIT_STRING}         { lexema = yytext(); return LIT_STRING; }
-{LIT_CHAR}           { lexema = yytext(); return LIT_CHAR; }
-{LIT_ENT}            { lexema = yytext(); return LIT_ENT; }
-{LIT_REAL}           { lexema = yytext(); return LIT_REAL; }
+{lit_str}         { lexema = yytext(); return LIT_STRING; }
+{lit_char}           { lexema = yytext(); return LIT_CHAR; }
+{lit_ent}            { lexema = yytext(); return LIT_ENT; }
+{lit_decimal}           { lexema = yytext(); return LIT_REAL; }
 
 /* ------------------ Identificadores ------------------ */
-{ID_CLASE}           { lexema = yytext(); return ID_CLASE; }
-{ID_VAR}             { lexema = yytext(); return ID_VAR; }
+{id}             { lexema = yytext(); return ID; }
 
 /* ------------------ Operadores y Símbolos ------------------ */
 "=="                { lexema = yytext(); return IGUAL_IGUAL; }
@@ -111,6 +107,7 @@ LIT_REAL    = [0-9]+\.[0-9]+
 "."                 { lexema = yytext(); return PUNTO; }
 "="                 { lexema = yytext(); return ASIGNACION; }
 "=>"                { lexema = yytext(); return ASIGNACION_ESPECIAL; }
+"<<"                { lexema = yytext(); return CONCATENACION; }
 
 /* ------------------ Fin de Archivo ------------------ */
 <<EOF>>             { return EOF; }
