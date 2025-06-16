@@ -36,9 +36,25 @@ public class Parser {
     }
 
     private String lexico() {
-        if (pos >= tokens.size()) return "36"; // $
-        return String.valueOf(tokens.get(pos));
+    while (pos < tokens.size()) {
+        int token = tokens.get(pos);
+
+        if (token == 505 || token == 999) {
+            // Ignorar comentario o EOF ficticio
+            pos++;
+            continue;
+        } else if (token == 911) {
+            // Token de error léxico
+            vista.agregarFila(pilaToString(), entradaRestante(), "Error léxico: símbolo no reconocido");
+            return "911";
+        } else {
+            return String.valueOf(token); // Token válido
+        }
     }
+
+    return "36"; // $ (fin de entrada real)
+    }
+
 
     private String entradaRestante() {
         StringBuilder sb = new StringBuilder();
@@ -63,6 +79,11 @@ public class Parser {
         while (true) {
             String estado = pila.peek();
             String simbolo = lexico();
+            // Si el lexico devolvió el token de error léxico, detener análisis
+            if (simbolo.equals("911")) {
+                return false;
+            }
+
             String accion = tabla.accion(estado, simbolo);
 
             /* System.out.print(pilaToString() + "\t\t" + entradaRestante() + "\t\t");

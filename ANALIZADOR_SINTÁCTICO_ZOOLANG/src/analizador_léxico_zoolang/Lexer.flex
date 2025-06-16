@@ -85,8 +85,8 @@ lit_decimal    = [0-9]+\.[0-9]+
 "<"                 { lexema = yytext(); return MENOR; }
 ">="                { lexema = yytext(); return MAYOR_IGUAL; }
 ">"                 { lexema = yytext(); return MAYOR; }
-"y¡"                { lexema = yytext(); return AND; }
-"o¡"                { lexema = yytext(); return OR; }
+"Y¡"                { lexema = yytext(); return AND; }
+"O¡"                { lexema = yytext(); return OR; }
 "!"                 { lexema = yytext(); return NOT; }
 "+"                 { lexema = yytext(); return SUMA; }
 "-"                 { lexema = yytext(); return RESTA; }
