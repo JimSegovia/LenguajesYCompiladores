@@ -1,4 +1,4 @@
-package analizador_sintáctico_zoolang;
+package analizador_sintactico_zoolang;
 
 import java.util.Scanner;
 import vista.VistaAnalizadorSintáctico;
@@ -14,7 +14,7 @@ public class Main {
         });        
         
         // ESTO DE ACA SOLO TE PERMITE VER POR CONSOLA SI ESTA BIEN, SE PUEDE BORRAR SIN PROBLEMAS
-        /*
+        
         Analizador_Léxico lexer = new Analizador_Léxico();
         Scanner sc = new Scanner(System.in);
         System.out.print("Leer cadena: ");
@@ -27,6 +27,6 @@ public class Main {
         parser.setEntradaOriginal(lexer.getEntradaOriginal());
 
         boolean resultado = parser.sintactico();
-        System.out.println("Resultado: " + (resultado ? "Cadena valida" : "Cadena invalida"));*/
+        System.out.println("Resultado: " + (resultado ? "Cadena valida" : "Cadena invalida"));
     }
 }
