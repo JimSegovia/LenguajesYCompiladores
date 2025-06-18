@@ -260,7 +260,7 @@ public class Parser {
         }
     }
 
-    return "36"; // $ (fin de entrada real)
+    return null; // $ (fin de entrada real)
     }
 
 
@@ -340,9 +340,9 @@ public class Parser {
                 pila.push(accion.substring(1));
                 pos++;
 
-            }   else if (accion.startsWith("r")) {
+            }  else if (accion.startsWith("r")) {
                 int numProd = Integer.parseInt(accion.substring(1));
-                String[] produccion = producciones[numProd - 1];
+                String[] produccion = producciones[numProd - 1 ];
                 String lhs = produccion[0]; // Lado izquierdo
                 int rhsLen = produccion.length - 1; // Cantidad de símbolos en RHS
 
@@ -354,36 +354,26 @@ public class Parser {
                 reduccion.append("por lookahead: ").append(simbolo);
                 vista.agregarFila(pilaActual, entradaActual, reduccion.toString());
 
-                // Solo desapilar si la producción no es λ
-                if (rhsLen > 0) {
-                    for (int i = 0; i < rhsLen; i++) {
-                        pila.pop(); // símbolo
-                        pila.pop(); // estado
-                    }
+                // Paso 1: Desapilar 2*rhsLen elementos (símbolos y estados)
+                for (int i = 0; i < rhsLen; i++) {
+                    pila.pop(); // Símbolo
+                    pila.pop(); // Estado
                 }
 
-    // Obtener el estado en la cima actual
-    String estadoAnterior = pila.peek();
+                // Paso 2: Obtener el estado actual (después de desapilar)
+                String estadoAnterior = pila.peek();
 
-    // Validación opcional para evitar fallos
-    if (!esNumero(estadoAnterior)) {
-        vista.agregarFila(pilaToString(), entradaRestante(),
-            "Error: se esperaba un estado en la cima de la pila, pero se encontró '" + estadoAnterior + "'");
-        return false;
-    }
+                // Paso 3: Empujar el lhs (no terminal) y buscar el nuevo estado
+                pila.push(lhs);
+                String gotoEstado = tabla.accion(estadoAnterior, lhs); // Buscar en la tabla
 
-    // Empujar LHS y el nuevo estado
-    pila.push(lhs);
-    String gotoEstado = tabla.accion(estadoAnterior, lhs); // Buscar transición GOTO
+                if (gotoEstado == null) {
+                    vista.agregarFila(pilaToString(), entradaRestante(), 
+                        "Error: No hay transición GOTO para " + lhs + " desde estado " + estadoAnterior);
+                    return false;
+                }
 
-    if (gotoEstado == null) {
-        vista.agregarFila(pilaToString(), entradaRestante(), 
-            "Error: No hay transición GOTO para " + lhs + " desde estado " + estadoAnterior);
-        return false;
-    }
-
-    pila.push(gotoEstado);
-
+                pila.push(gotoEstado); // Empujar el nuevo estado
 
 
             } else {
@@ -394,14 +384,6 @@ public class Parser {
             } 
         }  
     }
-private boolean esNumero(String s) {
-    try {
-        Integer.parseInt(s);
-        return true;
-    } catch (NumberFormatException e) {
-        return false;
-    }
-}
 
     private String pilaToString() {
         StringBuilder sb = new StringBuilder();
