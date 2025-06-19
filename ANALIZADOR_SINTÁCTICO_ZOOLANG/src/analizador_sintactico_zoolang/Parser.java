@@ -229,6 +229,83 @@ public class Parser {
             {"<MasIncreDecre>"}
         };
     }
+    private static final java.util.Map<String, String> equivalentes = new java.util.HashMap<>();
+
+    static {
+        equivalentes.put("400", "initHabit");
+        equivalentes.put("401", "mainZoo");
+        equivalentes.put("402", "finHabit");
+        equivalentes.put("403", "classHabit");
+        equivalentes.put("404", "acced->");
+        equivalentes.put("405", "modif->");
+        equivalentes.put("406", "met->");
+        equivalentes.put("407", "libre");
+        equivalentes.put("408", "encerrado");
+        equivalentes.put("409", "protect");
+        equivalentes.put("410", "compor");
+        equivalentes.put("411", "ent");
+        equivalentes.put("412", "ant");
+        equivalentes.put("413", "boul");
+        equivalentes.put("414", "corpse");
+        equivalentes.put("415", "stloro");
+        equivalentes.put("416", "char");
+        equivalentes.put("417", "self");
+        equivalentes.put("418", "NUEVO");
+        equivalentes.put("419", "INICIAR");
+        equivalentes.put("420", "TORT");
+        equivalentes.put("421", "devolver");
+        equivalentes.put("422", "rugg");
+        equivalentes.put("423", "reci");
+        equivalentes.put("424", "cama");
+        equivalentes.put("425", "leon");
+        equivalentes.put("426", "merodear");
+        equivalentes.put("427", "rondar");
+        equivalentes.put("428", "me");
+        equivalentes.put("429", "instinto");
+        equivalentes.put("430", "instintoFinal");
+        equivalentes.put("431", "reaccion");
+        equivalentes.put("432", "huir");
+        equivalentes.put("433", "verdad");
+        equivalentes.put("434", "falso");
+        equivalentes.put("435", "==");
+        equivalentes.put("436", "!=");
+        equivalentes.put("437", "<");
+        equivalentes.put("438", "<=");
+        equivalentes.put("439", ">");
+        equivalentes.put("440", ">=");
+        equivalentes.put("441", "Y¡");
+        equivalentes.put("442", "O¡");
+        equivalentes.put("443", "!");
+        equivalentes.put("444", "+");
+        equivalentes.put("445", "-");
+        equivalentes.put("446", "*");
+        equivalentes.put("447", "/");
+        equivalentes.put("448", "++");
+        equivalentes.put("449", "--");
+        equivalentes.put("450", "(");
+        equivalentes.put("451", ")");
+        equivalentes.put("452", "{");
+        equivalentes.put("453", "}");
+        equivalentes.put("454", "[");
+        equivalentes.put("455", "]");
+        equivalentes.put("456", ";");
+        equivalentes.put("457", ":");
+        equivalentes.put("458", ",");
+        equivalentes.put("459", ".");
+        equivalentes.put("460", "..");
+        equivalentes.put("461", "<<");
+        equivalentes.put("500", "id");
+        equivalentes.put("501", "lit_str");
+        equivalentes.put("502", "lit_char");
+        equivalentes.put("503", "lit_ent");
+        equivalentes.put("504", "lit_decimal");
+        equivalentes.put("505", "comentario");
+        equivalentes.put("506", "=");
+        equivalentes.put("507", "=>");
+        equivalentes.put("911", "ERROR");
+        equivalentes.put("999", "EOF");
+    }
+
     private vista.VistaAnalizadorSintáctico vista;
 
     public void setTokens(List<Integer> tokens) {
@@ -249,7 +326,10 @@ public class Parser {
             vista.agregarFila(pilaToString(), entradaRestante(), "Error léxico: símbolo no reconocido");
             return "911";
         } else {
-            return String.valueOf(token); // Token válido
+            //return String.valueOf(token); // Retornar token valido
+            //REEEMPLAZO PARA MOSTRAR EL TOKEN
+            return equivalentes.getOrDefault(token, String.valueOf(token)); // realizar remplazo al imprimir 
+
         }
     }
     return null; // $ (fin de entrada real)
@@ -300,8 +380,11 @@ public class Parser {
             return true;    
             }
             
-            if (accion.startsWith("d")) {              
-                accionTexto = "Desplazar: " + simbolo + " -> estado " + accion.substring(1);
+            if (accion.startsWith("d")) {
+                String simboloNombre = equivalentes.getOrDefault(simbolo, simbolo);
+                accionTexto = "Desplazar: " + simboloNombre + " -> estado " + accion.substring(1);
+                //REEEMPLAZO PARA MOSTRAR EL TOKEN
+                //accionTexto = "Desplazar: " + simbolo + " -> estado " + accion.substring(1);
                 vista.agregarFila(pilaActual, entradaActual, accionTexto);
 
                 pila.push(simbolo);
@@ -317,9 +400,14 @@ public class Parser {
                 // Mostrar acción de reducción
                 StringBuilder reduccion = new StringBuilder("Reducir: " + lhs + " -> ");
                 for (int i = 1; i < produccion.length; i++) {
-                    reduccion.append(produccion[i]).append(" ");
+                    String cuerpo = produccion[i];
+                    reduccion.append(equivalentes.getOrDefault(cuerpo, cuerpo)).append(" ");
+                    //REEEMPLAZO PARA MOSTRAR EL TOKEN
+                    //reduccion.append(produccion[i]).append(" ");
                 }
-                reduccion.append("por lookahead: ").append(simbolo);
+                reduccion.append("por lookahead: ").append(equivalentes.getOrDefault(simbolo, simbolo));
+                //REEEMPLAZO PARA MOSTRAR EL TOKEN
+                //reduccion.append("por lookahead: ").append(simbolo);
                 vista.agregarFila(pilaActual, entradaActual, reduccion.toString());
 
                 // Paso 1: Desapilar 2*rhsLen elementos (símbolos y estados)
@@ -349,7 +437,12 @@ public class Parser {
     private String pilaToString() {
         StringBuilder sb = new StringBuilder();
         for (String s : pila) {
-            sb.append(s);
+            //sb.append(s);
+            if (equivalentes.containsKey(s)) {
+            sb.append(equivalentes.get(s)).append(" ");
+        } else {
+            sb.append(s).append(" ");
+        }
         }
         return sb.toString();
     }
