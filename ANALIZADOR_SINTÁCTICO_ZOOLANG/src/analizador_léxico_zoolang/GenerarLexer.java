@@ -5,10 +5,8 @@ import java.io.File;
 public class GenerarLexer {
     public static void main(String[] args) {
         // Generar el analizador léxico
-        generarLexer("src/analizador_léxico_zoolang/Lexer.flex");
-        
+        generarLexer("src/analizador_léxico_zoolang/Lexer.flex");     
     }
-
     public static void generarLexer(String ruta) {
         try {
             File archivo = new File(ruta);

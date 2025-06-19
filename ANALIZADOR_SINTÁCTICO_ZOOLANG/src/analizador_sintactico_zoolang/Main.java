@@ -13,20 +13,19 @@ public class Main {
             ventana.setVisible(true);
         });        
         
-        // ESTO DE ACA SOLO TE PERMITE VER POR CONSOLA SI ESTA BIEN, SE PUEDE BORRAR SIN PROBLEMAS
+        // Prueba por consola
         
-        Analizador_Léxico lexer = new Analizador_Léxico();
+       /* Analizador_Léxico lexer = new Analizador_Léxico();
         Scanner sc = new Scanner(System.in);
         System.out.print("Leer cadena: ");
         String input = sc.nextLine();
 
         lexer.analizar(input); // Produce tokens
-
         Parser parser = new Parser();
         parser.setTokens(lexer.getTokens());
         parser.setEntradaOriginal(lexer.getEntradaOriginal());
 
         boolean resultado = parser.sintactico();
-        System.out.println("Resultado: " + (resultado ? "Cadena valida" : "Cadena invalida"));
+        System.out.println("Resultado: " + (resultado ? "Cadena valida" : "Cadena invalida"));*/
     }
 }

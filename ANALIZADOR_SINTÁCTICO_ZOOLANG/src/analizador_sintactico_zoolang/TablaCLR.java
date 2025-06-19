@@ -14,18 +14,11 @@ public class TablaCLR {
         inicializarTabla();
     }
 
-    
-   /* private void inicializarTabla() { //REMPALZAR ESTA TABLA USANDO EL GENERADOR, FALTA CORREGIR EL GENERADOR PARA QUE CAMBIE LOS NO TERMINALES POR TOKENS AUTOAMTICAMENTE
-    Map<String, String> fila0 = new HashMap<>();
-    fila0.put("<S>", "1"); // Ir a estado 1 por símbolo <S>
-    fila0.put("400", "d2"); // Desplazar a estado 2 por símbolo initHabit
-    tabla.put(0, fila0);
-    } */
-    
     private void inicializarTabla() {
     try (BufferedReader br = new BufferedReader(new FileReader("src/analizador_sintactico_zoolang/tablaCLR.txt"))) {
         String linea;
         while ((linea = br.readLine()) != null) {
+            
             // Saltar líneas vacías o comentarios (opcional)
             if (linea.trim().isEmpty() || linea.startsWith("//")) continue;
 
@@ -46,16 +39,10 @@ public class TablaCLR {
     } catch (IOException e) {
         System.err.println("Error al leer la tabla CLR: " + e.getMessage());
         e.printStackTrace();
-    
-        
 }
-    System.out.println("✔ Leyendo tabla CLR desde archivo...");
-System.out.println("✔ Total de filas cargadas: " + tabla.size());
-
-    
+    System.out.println("Se cargó la tabla, filas cargadas: " + tabla.size());
     }
 
-    
     public String accion(String estado, String simbolo) {
         try {
             int est = Integer.parseInt(estado);
