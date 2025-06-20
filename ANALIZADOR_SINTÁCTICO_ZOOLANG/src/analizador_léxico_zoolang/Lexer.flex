@@ -22,7 +22,7 @@ import static analizador_léxico_zoolang.Tokens.*;
 
 /* ------------------- Expresiones ------------------- */
 espacio     = [ \t\r\n]+
-id      = [a-zA-Z][a-zA-Z0-9_\-]*
+id      = [a-zA-Z_][a-zA-Z0-9_]*
 lit_str  = \"([^\"]|\\.)*\"
 lit_char    = \'([^\']|\\.)\'
 lit_ent     = [0-9]+

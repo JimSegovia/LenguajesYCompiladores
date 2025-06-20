@@ -151,7 +151,7 @@ public class Parser {
             {"<MasMasMenosMenos>", "449"},
             {"<Rugg>", "422", "450", "<ExpreParaRugg>", "451", "456"},
             {"<Reci>", "423", "450", "500", "451", "456"},
-            {"<ExpreParaRugg>", "<Valor>", "<MasExpreParaRugg>", "456"},
+            {"<ExpreParaRugg>", "<Valor>", "<MasExpreParaRugg>"},
             {"<MasExpreParaRugg>", "461", "<ExpreParaRugg>"},
             {"<MasExpreParaRugg>"},
             {"<ExpreCompletas>", "<Expre>"},
@@ -347,92 +347,100 @@ public class Parser {
     }
 
     public boolean sintactico() {
-        pila.clear();
-        pos = 0;
-        pila.push("0");
+    // Reinicia la pila y la posición del token actual
+    pila.clear();
+    pos = 0;
+    pila.push("0");
 
-        while (true) {
-            String estado = pila.peek();
-            String simbolo = lexico();
-            // Si el lexico devolvió el token de error léxico, detener análisis
-            if (simbolo.equals("911")) {
-                return false;
-            }
-            String accion = tabla.accion(estado, simbolo);
-            
-            String pilaActual = pilaToString();
-            String entradaActual = entradaRestante();
-            String accionTexto;
+    // Bucle principal del analizador sintáctico
+    while (true) {
+        String estado = pila.peek();         // Obtiene el estado actual de la pila
+        String simbolo = lexico();           // Lee el siguiente símbolo/token de entrada
 
-            // VALIDACIÓN CRÍTICA
-            if (accion == null) {
-                vista.agregarFila(pilaActual, entradaActual, "Error: acción inválida [" + simbolo + "]");
-                return false;
-            }
+        if (simbolo.equals("911")) {
+            return false; // Detiene si hay error léxico
+        }
 
-            if (accion.equals("Aceptar")) {
-                vista.agregarFila(pilaActual, entradaActual, "Aceptar");
-                return true;
-            }
-                   
-            if (accion.equals("Aceptar")) {
-            vista.agregarFila(pilaActual, entradaActual, "Aceptar");
-            return true;    
-            }
-            
-            if (accion.startsWith("d")) {
-                String simboloNombre = equivalentes.getOrDefault(simbolo, simbolo);
-                accionTexto = "Desplazar: " + simboloNombre + " -> estado " + accion.substring(1);
-                //REEEMPLAZO PARA MOSTRAR EL TOKEN
-                //accionTexto = "Desplazar: " + simbolo + " -> estado " + accion.substring(1);
-                vista.agregarFila(pilaActual, entradaActual, accionTexto);
+        String accion = tabla.accion(estado, simbolo); // Consulta la acción desde la tabla LR
 
-                pila.push(simbolo);
-                pila.push(accion.substring(1));
-                pos++;
+        String pilaActual = pilaToString();         // Estado actual de la pila (para mostrar)
+        String entradaActual = entradaRestante();   // Entrada restante (para mostrar)
+        String accionTexto;
 
-            }  else if (accion.startsWith("r")) {
-                int numProd = Integer.parseInt(accion.substring(1));
-                String[] produccion = producciones[numProd - 1 ];
-                String lhs = produccion[0]; // Lado izquierdo
-                int rhsLen = produccion.length - 1; // Cantidad de símbolos en RHS
-
-                // Mostrar acción de reducción
-                StringBuilder reduccion = new StringBuilder("Reducir: " + lhs + " -> ");
-                for (int i = 1; i < produccion.length; i++) {
-                    String cuerpo = produccion[i];
-                    reduccion.append(equivalentes.getOrDefault(cuerpo, cuerpo)).append(" ");
-                    //REEEMPLAZO PARA MOSTRAR EL TOKEN
-                    //reduccion.append(produccion[i]).append(" ");
-                }
-                reduccion.append("por lookahead: ").append(equivalentes.getOrDefault(simbolo, simbolo));
-                //REEEMPLAZO PARA MOSTRAR EL TOKEN
-                //reduccion.append("por lookahead: ").append(simbolo);
-                vista.agregarFila(pilaActual, entradaActual, reduccion.toString());
-
-                // Paso 1: Desapilar 2*rhsLen elementos (símbolos y estados)
-                for (int i = 0; i < rhsLen; i++) {
-                    pila.pop(); // Símbolo
-                    pila.pop(); // Estado
-                }
-                // Paso 2: Obtener el estado actual (después de desapilar)
-                String estadoAnterior = pila.peek();
-                // Paso 3: Empujar el lhs (no terminal) y buscar el nuevo estado
-                pila.push(lhs);
-                String gotoEstado = tabla.accion(estadoAnterior, lhs); // Buscar en la tabla
-                if (gotoEstado == null) {
-                    vista.agregarFila(pilaToString(), entradaRestante(), 
-                        "Error: No hay transición GOTO para " + lhs + " desde estado " + estadoAnterior);
-                    return false;
-                }
-                pila.push(gotoEstado); // Empujar el nuevo estado
-
-            } else {      
+        if (accion == null) {
             vista.agregarFila(pilaActual, entradaActual, "Error: acción inválida [" + simbolo + "]");
             return false;
-            } 
-        }  
+        }
+
+        if (accion.equals("Aceptar")) {
+            vista.agregarFila(pilaActual, entradaActual, "Aceptar");
+            return true;
+        }
+
+        if (accion.startsWith("d")) {
+            // Usa el diccionario 'equivalentes' para mostrar nombre legible del token
+            String simboloNombre = equivalentes.getOrDefault(simbolo, simbolo);
+            accionTexto = "Desplazar: " + simboloNombre + " -> estado " + accion.substring(1);
+            
+            // REEMPLAZO: si deseas mostrar el número del token directamente (sin equivalente), usa esta línea:
+            // accionTexto = "Desplazar: " + simbolo + " -> estado " + accion.substring(1);
+            
+            vista.agregarFila(pilaActual, entradaActual, accionTexto);
+
+            pila.push(simbolo);               // Apila el símbolo
+            pila.push(accion.substring(1));   // Apila el nuevo estado
+            pos++;                            // Avanza al siguiente token
+        }
+
+        else if (accion.startsWith("r")) {
+            int numProd = Integer.parseInt(accion.substring(1)); // Número de producción
+            String[] produccion = producciones[numProd - 1];     // Producción a aplicar
+            String lhs = produccion[0];                          // Lado izquierdo
+            int rhsLen = produccion.length - 1;                  // Cantidad de símbolos en RHS
+
+            // Construye mensaje de reducción con equivalentes legibles
+            StringBuilder reduccion = new StringBuilder("Reducir: " + lhs + " -> ");
+            for (int i = 1; i < produccion.length; i++) {
+                String cuerpo = produccion[i];
+                reduccion.append(equivalentes.getOrDefault(cuerpo, cuerpo)).append(" ");
+
+                // REEMPLAZO: si deseas mostrar directamente el código simbólico sin equivalente:
+                // reduccion.append(produccion[i]).append(" ");
+            }
+
+            reduccion.append("por lookahead: ").append(equivalentes.getOrDefault(simbolo, simbolo));
+
+            // REEMPLAZO: si deseas mostrar directamente el token sin equivalente:
+            // reduccion.append("por lookahead: ").append(simbolo);
+
+            vista.agregarFila(pilaActual, entradaActual, reduccion.toString());
+
+            // Elimina 2 * RHS elementos de la pila (símbolo + estado por cada uno)
+            for (int i = 0; i < rhsLen; i++) {
+                pila.pop();
+                pila.pop();
+            }
+
+            // Transición GOTO
+            String estadoAnterior = pila.peek();
+            pila.push(lhs);
+            String gotoEstado = tabla.accion(estadoAnterior, lhs);
+            if (gotoEstado == null) {
+                vista.agregarFila(pilaToString(), entradaRestante(),
+                    "Error: No hay transición GOTO para " + lhs + " desde estado " + estadoAnterior);
+                return false;
+            }
+            pila.push(gotoEstado); // Apila el nuevo estado después del GOTO
+        }
+
+        else {
+            // Acción no válida (ni shift, ni reduce, ni aceptar)
+            vista.agregarFila(pilaActual, entradaActual, "Error: acción inválida [" + simbolo + "]");
+            return false;
+        }
     }
+}
+
     
     private String pilaToString() {
         StringBuilder sb = new StringBuilder();
